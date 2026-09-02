@@ -1,0 +1,17 @@
+# OpenSpec
+openspec/changes/*/evidence/*/act-added/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Temporary
+*.tmp
+*.bak
+*.orig

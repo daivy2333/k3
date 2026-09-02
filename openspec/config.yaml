@@ -1,0 +1,51 @@
+schema: spec-driven
+
+# Project context
+# Shown to AI when creating artifacts.
+context: |
+  Project: K3 板子信息汇总仓库 (SpacemiT K3 Board Documentation Aggregation)
+
+  Type: Pure documentation / Markdown aggregation. No application code, no
+  scrapers in this repo. The K3 information is curated manually from the
+  authoritative source below and reorganized into topic-based Markdown.
+
+  Source of truth (single):
+    https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs
+  - Language: Simplified Chinese (zh-CN) primary.
+  - Authority: Spacemit official community documentation.
+  - This repo mirrors the source's structure intent; do not invent facts.
+  - When the source updates, a change should propose a refresh and record
+    the new revision date.
+
+  Output conventions:
+    - All aggregated content lives under `docs/` as Markdown.
+    - File names use kebab-case and reflect topic, not source page slug.
+    - Each document starts with a `> 来源:` line citing the source page URL
+      and the last-revision date observed at the source.
+    - Cross-references use relative Markdown links.
+    - Tables of contents go to the top of each section overview file.
+
+  Workflow expectations:
+    - No code is written in this repo. Any tooling (scraper, validator)
+      belongs in a separate repo and is referenced via `references/spec.md`
+      with type `dependency` or `external-doc`.
+    - Changes to aggregated content are tracked through OpenSpec changes
+      with the source revision recorded in the change proposal.
+
+# Per-artifact rules
+rules:
+  proposal:
+    - State the source page or section that drives the change and the
+      observed revision date at the source.
+    - Identify whether the change is a refresh (source updated) or a
+      restructure (reorganizing existing content) before listing tasks.
+    - List `Non-goals` to prevent silently expanding into adjacent
+      Spacemit boards or K3 sections not in the user's request.
+  tasks:
+    - Each task targets a single topic-level document under `docs/`.
+    - Tasks may be batched only when they cover the same source page.
+  spec:
+    - Knowledge entries (Kxx) require the source page URL and the
+      observed revision date in the evidence field.
+    - Improvement entries (Ixx) must be tagged `status: pending` until
+      a change is opened; promoted when a change is created.
