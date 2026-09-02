@@ -39,8 +39,10 @@
 ## 支持范围
 
 - Claude Code: 已配置 (`.claude/skills/`, `.claude/commands/`)
-- Codex: 未配置
-- OpenCode: 未配置
+- Codex: 已配置 (`.agents/skills/` 软链, `AGENTS.md` 入口)
+- OpenCode: 已配置 (`.agents/skills/` 软链, `AGENTS.md` 入口)
+- skill 副本: 单一权威在 `.claude/skills/`, `.agents/skills/` 为软链, 不维护多份
+- skill frontmatter: 统一精简为 `name` + `description` 两字段 (三端共同)
 
 ## 工作区与分支
 
