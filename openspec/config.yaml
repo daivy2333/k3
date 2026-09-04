@@ -44,8 +44,7 @@ rules:
   tasks:
     - Each task targets a single topic-level document under `docs/`.
     - Tasks may be batched only when they cover the same source page.
-  spec:
+  specs:
     - Knowledge entries (Kxx) require the source page URL and the
       observed revision date in the evidence field.
-    - Improvement entries (Ixx) must be tagged `status: pending` until
-      a change is opened; promoted when a change is created.
+    - "Improvement entries (Ixx) must be tagged `status: pending` until a change is opened; promoted when a change is created."
