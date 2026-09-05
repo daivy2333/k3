@@ -1,13 +1,13 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: 初始化完成, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01 已完成, MS02-MS07 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
 ### MS01 — 来源覆盖与主题结构基线
 
-- Status: ready
+- Status: completed
 - Outcome: 建立 K3 官网资料的来源覆盖表、主题目录、文档模板和术语种子表, 使每个已发现页面都有明确职责、优先级和预期落点。
 - Rationale: 来源清点、主题归类和写作约束共同决定后续所有聚合文档的可追溯性; 单独完成后即可作为各主题 change 的稳定入口。
 - Dependencies: None
@@ -18,7 +18,7 @@
 - Verification boundary: R04-R08 的每个 URL 均被覆盖表引用; 目录符合 D02; 模板满足 M02、M03; 每个文档职责唯一; 仓库内没有新增可执行内容。
 - Diagnostic boundary: 失败范围限制为来源漏记、主题归类冲突、模板不合规或链接失效, 不进入具体硬件事实争议。
 - Split signals: 若新发现的未展开目录显著扩大清点工作, 将补充清点放入独立 change, 但不拆分本 milestone 的结构基线成果。
-- Related changes: None
+- Related changes: `establish-k3-doc-foundation` (2026-09-05 收尾, archived)
 - Related references: R01, R03, R04, R05, R06, R07, R08
 
 ### MS02 — 来源追踪与人工刷新基线
@@ -132,6 +132,7 @@
 ## 最近完成
 
 - 项目初始化: 完成 OpenSpec 结构, specs, SNAPSHOT, tasks, change-cycle 模板, CLAUDE.md。
+- MS01 / change `establish-k3-doc-foundation` (2026-09-05 收尾, archived): 完成 R01、R04-R08 的 38 个唯一 URL 来源覆盖、主题目录、文档模板、术语种子、6 类已知缺口与人工刷新流程; 修正 `openspec/config.yaml` 的 YAML quoting, 使 OpenSpec CLI 加载既有 artifact rules; 同时建立 MS02 的机制基础 (refresh change 工作流), 但首次真实 source refresh 仍由未来来源变更 change 验收。
 
 ## 与 OpenSpec Changes 的同步
 

@@ -19,7 +19,7 @@
 - [主题文档模板](reference/document-template.md): 主题文档的写作约束、可复用骨架与反例；包含单来源/多来源首行、四级证据强度、500 行拆分规则。
 - [术语表](reference/terminology.md): 20 个基础术语的主写法、英文原词、别名与使用说明；标题层只使用主写法。
 - [已知缺口](reference/known-gaps.md): 6 类缺口的当前证据、禁止推断、解除条件与影响主题；每类对应具体的 source-coverage 状态。
-- `docs/reference/source-refresh.md`: 人工刷新状态机与操作顺序；由 Iteration 001（T7）创建，本入口在指南就绪后转为相对链接。
+- [来源刷新指南](reference/source-refresh.md): 人工刷新五种结果（unchanged / changed / moved / removed / unreachable）、操作顺序、change 与缺口边界、中断恢复与三段文字演练；与覆盖表的长期聚合状态、访问状态严格分离。
 
 ## 主题职责（未来路径）
 

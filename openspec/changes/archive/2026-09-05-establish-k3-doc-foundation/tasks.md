@@ -9,8 +9,8 @@
 
 ## 2. Iteration 001 — 刷新与一致性
 
-- [ ] 2.1 [T7] 创建 `docs/reference/source-refresh.md`，定义人工刷新状态、操作顺序、中断恢复和 change 边界。
-- [ ] 2.2 [T8] 更新 `docs/index.md`，在刷新指南存在后加入有效导航并完成全量一致性检查。
+- [x] 2.1 [T7] 创建 `docs/reference/source-refresh.md`，定义人工刷新状态、操作顺序、中断恢复和 change 边界。
+- [x] 2.2 [T8] 更新 `docs/index.md`，在刷新指南存在后加入有效导航并完成全量一致性检查。
 
 ## Task Contracts
 

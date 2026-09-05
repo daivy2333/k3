@@ -25,7 +25,7 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 类型: external-doc
 - URL: https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs
 - 语言: zh-CN
-- 最近观察修订日期: (待首次聚合时由 change 记录)
+- 最近观察修订日期: 2026-09-02 (initial observation baseline, 由 change `establish-k3-doc-foundation` 记录; 源端未公开修订日期, 后续由 refresh change 更新)
 - 用途: 本仓库 M01 指定的唯一权威源; 任何 K3 相关信息变更首先在此确认。
 - 状态: active
 
