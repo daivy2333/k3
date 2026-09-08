@@ -151,3 +151,11 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: captured 2026-09-08, k3 `573162934e6ebdb6fe5d254c09cd29a922231e15`, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`, StarryOS `6fcc602de48217a125d40f1f34635138464a2b9e`
 - 用途: 按优先级检索十组可复用材料、milestone 映射、验证缺口以及尚需补齐的 `rt-async`、`ov-channels`、U-Boot 和板级材料。
 - 状态: active
+
+## R13 — K3 CoM260 平台控制与 UART 基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-com260-platform-uart-baseline/spec.md`
+- 版本: 2026-09-08 由 change `establish-k3-com260-platform-uart-baseline` 归档时同步（5 added, 0 removed, 0 modified）
+- 用途: 收录 K3 AP / APBC2 secure / RCPU 三域的 pinctrl / clock / reset / APBC / CCU provider 依赖, UART 17 实例的 MMIO / IRQ / FIFO / threshold / compatible 字段, 静态与运行时 console 路径分层, PXA UART 工程经验适用边界, 以及来源覆盖与未知项导航规则; 是 MS04 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
+- 状态: active

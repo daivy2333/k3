@@ -1,9 +1,9 @@
 # SNAPSHOT
 
 > 当前项目状态: `current`
-> 最后同步: 2026-09-08 (Tue Sep 08 2026 14:05:00 GMT+0800) 增量刷新
+> 最后同步: 2026-09-08 (Tue Sep 08 2026 19:37:00 GMT+0800) 增量刷新
 > 同步者: `openspec-docs-maintainer`
-> 同步 revision: `1f572bb` + 未提交 change `establish-k3-com260-board-boot-baseline` 收尾同步 (MS03 全部产品交付 + 项目级状态)
+> 同步 revision: `1f572bb` + 未提交 change `establish-k3-com260-platform-uart-baseline` 收尾同步 (MS04 全部产品交付 + 项目级状态; 在 MS03 同步基线之上增量刷新)
 
 ## 项目身份
 
@@ -17,7 +17,7 @@
 - URL: https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs
 - 语言: 简体中文
 - 权威性: Spacemit 官方社区文档
-- 最近观察修订日期: 2026-09-07 (initial observation baseline 2026-09-02 由 change `establish-k3-doc-foundation` 记录; 2026-09-05 由 refresh change `establish-k3-source-tracking-baseline` 更新; 2026-09-08 由 change `establish-k3-com260-board-boot-baseline` 在 §6.6 重新观察确认; R01 仍为 SPA 壳, 实际可见身份为 Vue SPA title="SpacemiT", `partially-observed` 状态保持)
+- 最近观察修订日期: 2026-09-08 (initial observation baseline 2026-09-02 由 change `establish-k3-doc-foundation` 记录; 2026-09-05 由 refresh change `establish-k3-source-tracking-baseline` 更新; 2026-09-08 由 change `establish-k3-com260-board-boot-baseline` 在 §6.6 重新观察确认; 2026-09-08 由 change `establish-k3-com260-platform-uart-baseline` 在 §3.2 / §6 重新观察确认; R01 仍为 SPA 壳, 实际可见身份为 Vue SPA title="SpacemiT", `partially-observed` 状态保持)
 
 ## 形态与目录
 
@@ -28,7 +28,8 @@
   - `docs/index.md` — 总入口与主题职责表
   - `docs/reference/` — 来源覆盖、文档模板、术语、已知缺口与人工刷新指南
   - `docs/boot/` — K3 启动链、镜像与 DTS 主题文档
-  - `docs/platform/` — K3 SoC 概述与 CoM260 板级资源主题文档
+  - `docs/platform/` — K3 SoC 概述、CoM260 板级资源与平台控制 (pinctrl/clock/reset/APBC/CCU) 主题文档
+  - `docs/serial/` — K3 UART 控制器实例、CoM260 UART0 物理接口与 console 链路主题文档
   - `openspec/` — OpenSpec 配置, specs, changes (active 与 archive)
   - `.claude/` — Claude Code 入口 (skills, commands, docs, analysis, runbooks, incidents)
   - `CLAUDE.md` — 项目公共规则
@@ -51,22 +52,24 @@
 
 ## 工作区与分支
 
-- 工作区: change `establish-k3-doc-foundation` 与 `establish-k3-source-tracking-baseline` 已于 2026-09-05 收尾归档; change `establish-k3-com260-board-boot-baseline` 于 2026-09-08 收尾归档 (MS03); 工作区待常规 commit 的产品代码包括 `docs/index.md` / `docs/boot/com260-boot-chain.md` / `docs/boot/com260-image-and-dts.md` / `docs/platform/com260-board-resources.md` / `docs/platform/k3-soc-overview.md` / `docs/reference/source-coverage.md` / `docs/reference/known-gaps.md` / `docs/reference/source-refresh.md` 与 `.claude/analysis/rt-async-amp-k3-{boot-platform,drivers,shared-memory,starryos-reuse}.md`。
+- 工作区: change `establish-k3-doc-foundation` / `establish-k3-source-tracking-baseline` / `establish-k3-com260-board-boot-baseline` / `establish-k3-com260-platform-uart-baseline` 已分别于 2026-09-05 / 2026-09-05 / 2026-09-08 / 2026-09-08 收尾归档 (MS01 / MS02 / MS03 / MS04); 工作区待常规 commit 的产品代码包括 `docs/index.md` / `docs/boot/com260-boot-chain.md` / `docs/boot/com260-image-and-dts.md` / `docs/platform/com260-board-resources.md` / `docs/platform/k3-soc-overview.md` / `docs/platform/k3-platform-control.md` / `docs/serial/com260-uart.md` / `docs/reference/source-coverage.md` / `docs/reference/known-gaps.md` / `docs/reference/source-refresh.md` 与 `.claude/analysis/rt-async-amp-k3-{boot-platform,drivers,shared-memory,starryos-reuse}.md`。
 - Git 分支: `main`
-- 归档目录: `openspec/changes/archive/2026-09-05-establish-k3-doc-foundation/`, `openspec/changes/archive/2026-09-05-establish-k3-source-tracking-baseline/`, `openspec/changes/archive/2026-09-05-establish-k3-com260-board-boot-baseline/`
+- 归档目录: `openspec/changes/archive/2026-09-05-establish-k3-doc-foundation/`, `openspec/changes/archive/2026-09-05-establish-k3-source-tracking-baseline/`, `openspec/changes/archive/2026-09-05-establish-k3-com260-board-boot-baseline/`, `openspec/changes/archive/2026-09-08-establish-k3-com260-platform-uart-baseline/`
 
 ## 已建立文档
 
 - `docs/index.md`: 总入口、CoM260 范围、九个 reference / boot / platform 链接与十类主题职责 (T2, T8, MS03 T13)
-- `docs/reference/source-coverage.md`: 51 个唯一 URL 唯一覆盖表 (MS01 baseline 38 + MS03 Iteration 000 新增 6 + Iteration 001 第一轮新增 3 + Iteration 001 修复轮新增 4 个 raw DTS 文件), R01/R04-R08 与两个 linux-6.18 raw DTS URL 已逐项登记 (T3, MS03 T7-T9)
+- `docs/reference/source-coverage.md`: 59 个唯一 URL 唯一覆盖表 (MS01-MS02 baseline 38 + MS03 Iter 000 新增 6 + Iter 001 新增 7 + MS04 Iter 000 新增 8), R01/R04-R08、linux-6.18 仓库 `k3-br-v1.0.y` 分支 raw DTS / binding / driver URL 与 docs-buildroot 05-UART.md、com260_ds.md 等 8 个 MS04 新增 URL 已逐项登记 (T3, MS03 T7-T9, MS04 T2)
 - `docs/reference/document-template.md`: 首行来源、源端修订、观察日期与证据强度格式 (T4)
 - `docs/reference/terminology.md`: K3、CoM260 Kit、SoC、AP、RCPU、AIA、APLIC、IMSIC、MMIO、IRQ、DMA、IOMMU、GMAC、PHY、MDIO、RGMII、polling、async、waker、coherency 二十项主写法与别名 (T5)
-- `docs/reference/known-gaps.md`: 7 个缺口 (G1-G7) 含 G3 partial, G7 新增 (CoM260 Kit 默认目标 DTS 未唯一映射), G8 已删除 (镜像 release management 超出 T12 范围); 含镜像内部组成与 aliases 节点的局部未知项交叉引用 (T6, MS03 T12)
+- `docs/reference/known-gaps.md`: 10 个缺口 (G1-G10) 含 G3 partial, MS03 Iter 001 / T11 新增 G7 (CoM260 Kit 默认目标 DTS 未唯一映射), MS04 Iter 001 / T3 新增 G8 (K3 SoC `uart10` base 偏移)、G9 (`spacemit,k1-uart` compatible 字符串的 K3 硬件边界)、G10 (K3 UART 完整寄存器语义与电气映射); 状态 9 `open` + 1 `partial`, 源端 `docs-product/com260_ds.md` / `k3.dtsi` / `k3-rdomain.dtsi` / `8250.yaml` / `8250_of.c` 已逐项登记 (T6, MS03 T12, MS04 T5)
 - `docs/reference/source-refresh.md`: 持久字段 / 新 baseline 字段 / SPA 壳 / 真正的停止条件 四节, 以及 MS02 建立的 refresh change 工作流 (T7, MS02)
 - `docs/platform/k3-soc-overview.md`: K3 SoC 能力概述, 涵盖 CPU/内存/外设/连接/启动能力总览 (MS03 Iteration 000 交付)
 - `docs/platform/com260-board-resources.md`: K3 CoM260 模组 + Kit 板级资源, 涵盖 SoC 集成接口、模组引脚、Kit 底板连接器、PHY、UART、debug 等 (MS03 Iteration 000 交付)
+- `docs/platform/k3-platform-control.md`: K3 SoC 平台控制资源按 AP / APBC2 secure / RCPU 三域分离的 pinctrl / clock / reset / APBC / CCU provider 依赖与 UART consumer 字段映射; 包含 8.6 节点 AP 域 `uart10` base 偏移未知项, 与 `com260-uart.md` §10.1 / `known-gaps.md` G8 交叉引用 (MS04 Iteration 000 交付, 313 行)
 - `docs/boot/com260-boot-chain.md`: K3 SoC 启动能力与 K3 CoM260 Kit 已观察到的启动链路 (local boot: Boot ROM → FSBL/SPL → ESOS → OpenSBI → U-Boot → payload/OS; download boot: Boot ROM → U-Boot Fastboot), 介质、SDK 版本边界、未知闭包 (MS03 T10, 202 行)
 - `docs/boot/com260-image-and-dts.md`: K3 CoM260 镜像类型、写入方式、DTS 候选集合 (6 个 .dts + 1 个 .dtsi base, 直接打开 4 个文件), CMA 0x140000000 + DRAM 0x102000000 解码, 缺口闭包 (MS03 T11, 210 行)
+- `docs/serial/com260-uart.md`: K3 SoC 17 个 UART 物理实例 (AP 域 10 + APBC2 secure 1 + RCPU 域 6) 的 DTS 字段、CoM260 UART0 物理接口到 `uart0` 节点与静态 console 链路、来源冲突 (FIFO 深度 256 vs 64) 与固定 revision 第三方 (Rt-Async-AMP/tgoskits PXA UART) 经验; 17 实例矩阵、aliases 映射、`uart10` base 偏移未知项闭包; 首行覆盖 10 个官方直接 URL, §8 第三方外链转本地相对路径 (MS04 Iteration 001 交付, 316 行)
 
 ## 已建立分析
 
@@ -81,7 +84,8 @@
 - MS01 (来源覆盖与主题结构基线) — `completed` (2026-09-05 收尾, 见 `.claude/docs/tasks.md`)
 - MS02 (来源追踪与人工刷新基线) — `completed` (2026-09-05 收尾, change `establish-k3-source-tracking-baseline` 首次真实 refresh 完成 7 URL 逐 URL 结论与 `交叉验证` 等级 SDK baseline)
 - MS03 (K3 CoM260 板级与启动事实基线) — `completed` (2026-09-08 收尾, change `establish-k3-com260-board-boot-baseline` 完成 platform/boot 主题文档 + 51 URL 覆盖 + 7 个缺口闭包 + 4 个 raw DTS 文件直接打开)
-- MS04-MS11 — `planned`
+- MS04 (CoM260 平台控制与串口知识基线) — `completed` (2026-09-08 收尾, change `establish-k3-com260-platform-uart-baseline` 完成 2 篇产品文档 (k3-platform-control 313 行 / com260-uart 316 行) + 59 URL 覆盖 + 10 个缺口 (G3 partial) + 17 实例 UART 矩阵 + 3 个 raw DTS 直接打开 + delta spec 同步 R13; Iter 001 / Cycle 001-rework 修复 AP 域地址范围离散集 (T3-R1)、G8 节点集合 (T5-R1)、§8.6 跨文档一致 (T6-R1))
+- MS05-MS11 — `planned`
 
 ## 关键约束摘要 (指针)
 
@@ -99,8 +103,9 @@
 - D08 配置修复只增加必要引用 — `openspec/specs/decisions/spec.md`
 - R01 权威源 URL — `openspec/specs/references/spec.md`
 - R03-R12 当前有用、持续观察、第三方分析 URL/文档集合 — `openspec/specs/references/spec.md`
+- R13 MS04 delta spec (`openspec/specs/k3-com260-platform-uart-baseline/spec.md`) — `openspec/specs/references/spec.md`
 
 ## 同步状态
 
-- `current`: 本次增量刷新同步了 change `establish-k3-com260-board-boot-baseline` 收尾后的项目状态; MS03 已完成, 4 篇产品文档 + 51 URL 覆盖 + 7 缺口闭包 + 4 raw DTS 文件直接打开; 4 份 Rt-Async-AMP 第三方分析已登记 R09-R12。
+- `current`: 本次增量刷新同步了 change `establish-k3-com260-platform-uart-baseline` 收尾后的项目状态; MS04 已完成, 2 篇产品文档 (`k3-platform-control.md` 313 行 / `com260-uart.md` 316 行) + 59 URL 覆盖 (在 MS03 51 之上新增 8) + 10 个缺口 (G3 partial, G8 / G9 / G10 由 MS04 Iter 001 / T3 新增) + 17 UART 实例矩阵 + 3 个 raw DTS 直接打开 (k3.dtsi / k3-rdomain.dtsi / 8250_of.c) + delta spec 同步 (5 added) + R13 登记; Iter 001 / Cycle 001-rework 收敛所有地址范围与节点集合歧义。
 - 任何字段变更需要刷新本文件并把状态从 `current` 保留, 或在新版本失效时标 `stale`。

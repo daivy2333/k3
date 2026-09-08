@@ -100,6 +100,42 @@
 - 影响主题: `docs/platform/`(平台资源映射)、`docs/network/`(GMAC/PHY 介质归属)、MS07(EtherCAT 物理通路)。
 - 状态变更记录: 2026-09-07 由 Iteration 001 / T11 新增, 状态 `open`。
 
+## G8. K3 SoC `uart10` base 偏移
+
+- 分类: 硬件事实
+- 当前证据: Iteration 001 / T3 由 [`k3.dtsi`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3.dtsi) 直接打开(2026-09-08), `uart0, uart2..uart9` base 沿 `0xd4017000 + N × 0x100` 步进, 但 `uart10` 位于 `0xd401f000`(相对 `uart9` 的 `0xd4017800` 偏移 `0x7800`), 与前 9 个非 secure 实例的 stride 公式不符; [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3.2 已闭合 base 与 IRQ 字段但保留偏移原因为未知项。
+- 禁止推断: 不得用 `0x100` stride 公式推导 `uart10` base; 不得假设 `uart10` 不可用或被保留; 不得在 K3 公开资料中宣称"UART10 不可访问"; 不得由 `uart10` 偏移反推其他 AP UART 实例的步进公式。
+- 解除条件:
+  - 取得 `k3.dtsi` 注释或 SpacemiT 公开 programmer manual 中关于 `uart10` 偏移的说明;
+  - 或 `k3_com260.dts(i)` 板级文件引用 `uart10` 时显式注释;
+  - 或 docs-buildroot 05-UART.md 公开 K3 UART 总线布局。
+- 影响主题: [`docs/serial/`](../serial/com260-uart.md)(完整 17 实例矩阵与 aliases `serial10 = &uart10` 语义); [`docs/platform/`](../platform/com260-board-resources.md)(板级启用 `uart10` 时的地址与 IRQ 解析)。
+- 状态变更记录: 2026-09-08 由 Iteration 001 / T3 新增, 状态 `open`。
+
+## G9. `spacemit,k1-uart` compatible 字符串的 K3 硬件边界
+
+- 分类: 硬件事实
+- 当前证据: [`8250.yaml`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/Documentation/devicetree/bindings/serial/8250.yaml) 中 `spacemit,k1-uart` 与 `intel,xscale-uart` 共同作为 compatible; [`k3.dtsi`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3.dtsi) 与 [`k3-rdomain.dtsi`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3-rdomain.dtsi) 中 17 个 UART 节点(AP 11 + RCPU 6)全部使用此组合, RCPU 节点额外携带 `spacemit,rcpu-uart` 标志。
+- 禁止推断: 不得将 `spacemit,k1-uart` 字符串推定为 K1 SoC 硬件身份; 不得由命名推定 K3 UART 寄存器全集等同于 K1 PXA UART; 不得由 `intel,xscale-uart` 推定 K3 沿用 PXA IP 全部行为; 不得由 `spacemit,rcpu-uart` 标志反推 RCPU 域完整硬件能力。
+- 解除条件:
+  - docs-buildroot 05-UART.md 公开 K3 专属 compatible 与 K1 差异;
+  - 或 K3 programmer manual 给出 K3 UART IP 修订与 PXA 关系;
+  - 或 SpacemiT 公开 `8250_of.c` 中 K3 专属匹配逻辑的注释说明。
+- 影响主题: [`docs/serial/`](../serial/com260-uart.md)(后续 driver 选型; future Iteration 中 K3 专属 compatible 是否独立); [`docs/platform/`](../platform/k3-platform-control.md)(命名风格与 K1 体系沿用边界)。
+- 状态变更记录: 2026-09-08 由 Iteration 001 / T3 新增, 状态 `open`。
+
+## G10. K3 UART 完整寄存器语义与电气映射
+
+- 分类: 硬件事实
+- 当前证据: [`8250.yaml`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/Documentation/devicetree/bindings/serial/8250.yaml) 给出 binding schema, [`k3.dtsi`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3.dtsi) 给出 base + IRQ + `reg-shift` + `fifo-size`; [`8250_of.c`](https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/drivers/tty/serial/8250/8250_of.c) 在 `CONFIG_SOC_SPACEMIT` 条件下包含 `spacemit_8250_set_termios` 与 `spacemit_acpu_match_clk_rate`; 但完整 UART 寄存器语义、电气特性、programmer manual 缺失。
+- 禁止推断: 不得用 Linux 默认值或 PXA 通用知识补齐 K3 UART 寄存器; 不得用 8250 通用 FIFO 公式反推 K3 实际 IP 行为; 不得由 PXA errata 推定 K3 适用 errata; 不得由 `spacemit_8250_set_termios` 行为反推 K3 完整寄存器集; 不得由 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3-§5 实例字段推定寄存器偏移全集。
+- 解除条件:
+  - 取得 SpacemiT 公开 programmer manual 中 K3 UART IP 章节;
+  - 或 K3 SoC datasheet 寄存器章节公开;
+  - 或 docs-buildroot 05-UART.md 增补 K3 专属寄存器偏移表与 errata 列表。
+- 影响主题: [`docs/serial/`](../serial/com260-uart.md)(后续 driver 实现; 不在本 change 范围); MS05(IRQ budget; UART 中断 cause/ack); MS06(DMA 触发条件与 cache maintenance); MS07(GMAC 寄存器已知; UART 可类比)。
+- 状态变更记录: 2026-09-08 由 Iteration 001 / T3 新增, 状态 `open`。
+
 ---
 
 ## 缺口状态汇总
@@ -113,6 +149,9 @@
 | G5 | 硬件事实 | open | 2026-09-02 |
 | G6 | 硬件事实 | open | 2026-09-02 |
 | G7 | 硬件事实 | open | 2026-09-07 |
+| G8 | 硬件事实 | open | 2026-09-08 |
+| G9 | 硬件事实 | open | 2026-09-08 |
+| G10 | 硬件事实 | open | 2026-09-08 |
 
 ## 缺口与 source-coverage 的对应
 
@@ -120,5 +159,6 @@
 - G3、G4、G5、G6 对应 `source-coverage.md` 中标记为 `active` 但未提供寄存器级描述的 R04/R05 资料行。
 - G3 在 2026-09-07 由 Iteration 001 / T11 部分解除, 仍需 PHY 实例、MMIO、寄存器、Kit 实物连接器进一步证据。
 - G7 由 Iteration 001 / T11 新增, 对应 `source-coverage.md` 中 T7 / T8 / T9 三行(linux-6.18 仓库 `k3-br-v1.0.y` 分支目录、docs-buildroot boot.md、image.md)。
+- G8、G9、G10 由 Iteration 001 / T3 新增, 对应 `source-coverage.md` 中 T11(05-UART.md)、T12(`k3.dtsi` raw)、T13(`k3-rdomain.dtsi` raw)、T14(8250.yaml)、T15(8250_of.c) 五行; 与 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3 / §5 / §10.1 / §10.4 / §10.5 交叉引用。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
 - 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。

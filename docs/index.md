@@ -28,21 +28,24 @@
 
 - `docs/platform/`
   - [k3-soc-overview.md](platform/k3-soc-overview.md): K3 SoC 概述(pinctrl/clock/reset/显示/USB/PCIe 等控制器能力)、启动能力、BROM 引导与已知 SDK baseline 入口。已聚合(Iteration 000)。
+  - [k3-platform-control.md](platform/k3-platform-control.md): K3 SoC 平台控制资源按 AP / APBC2 secure / RCPU 三域分离的 pinctrl / clock / reset / APBC / CCU provider 依赖与 UART consumer 字段映射。已聚合(Iteration 000)。
   - [com260-board-resources.md](platform/com260-board-resources.md): K3 CoM260 模组与 Kit 板级资源(电源、UART、USB、PCIe、以太网、显示、摄像头、GPIO、SPI、SD、CAN、UFS、eMMC、EtherCAT、电源域)。已聚合(Iteration 000)。
 - `docs/boot/`
   - [com260-boot-chain.md](boot/com260-boot-chain.md): K3 SoC 启动能力与 K3 CoM260 Kit 已观察到的启动链路(local boot 路径: Boot ROM → FSBL/SPL → ESOS → OpenSBI → U-Boot → payload/OS; download boot 路径: Boot ROM → U-Boot Fastboot)、介质(SoC 支持 vs Kit 可用)、SDK 版本边界与未知项闭包。已聚合(Iteration 001)。
   - [com260-image-and-dts.md](boot/com260-image-and-dts.md): K3 CoM260 Kit 的可证镜像类型、写入方式、CoM260 DTS 候选集合(7 个候选 + 3 个已直接打开)、产品版本与 DTS 命名映射、未知项闭包。已聚合(Iteration 001)。
+- `docs/serial/`
+  - [com260-uart.md](serial/com260-uart.md): K3 SoC 17 个 UART 物理实例(AP 域 10 + APBC2 secure 1 + RCPU 域 6)的 DTS 字段、CoM260 UART0 物理接口到 `uart0` 节点与静态 console 链路、来源冲突与固定 revision 第三方经验。已聚合(Iteration 001)。
 
 ## 主题职责
 
-> 以下九类职责在覆盖表的 `主题位置` 字段已分配；`platform` 与 `boot` 已聚合正文(见上节), 其余 7 类在各自聚合 change 之前不创建空目录或占位正文。
+> 以下九类职责在覆盖表的 `主题位置` 字段已分配；`platform`、`boot`、`serial` 已聚合正文(见上节), 其余 6 类在各自聚合 change 之前不创建空目录或占位正文。
 
 | 主题路径 | 职责 | 当前主要来源（R05/R06 编号） | 状态 |
 | --- | --- | --- | --- |
-| `docs/platform/` | SoC 概述、pinctrl、clock、reset、设备管理；CoM260 板级资源归属 | R04 k3_ds / root_overview / com260_hw_resources；R05 device_management / 01-PINCTRL / 16-Clock / Reset | 已聚合(Iteration 000)：k3-soc-overview / com260-board-resources |
+| `docs/platform/` | SoC 概述、pinctrl、clock、reset、设备管理；CoM260 板级资源归属 | R04 k3_ds / root_overview / com260_hw_resources；R05 device_management / 01-PINCTRL / 16-Clock / Reset | 已聚合(Iteration 000)：k3-soc-overview / k3-platform-control / com260-board-resources |
 | `docs/boot/` | 启动流程、镜像构建；OpenSBI / U-Boot handoff | R05 boot / image；linux-6.18 仓库 k3-br-v1.0.y 分支 | 已聚合(Iteration 001)：com260-boot-chain / com260-image-and-dts |
 | `docs/interrupts/` | AIA / APLIC / IMSIC、timer、hart routing | R05 Timer | 待聚合；G4 阻塞寄存器级描述 |
-| `docs/serial/` | UART 控制器、pinmux、early console | R05 05-UART | 待聚合 |
+| `docs/serial/` | UART 控制器、pinmux、early console | R05 05-UART | 已聚合(Iteration 001)：com260-uart |
 | `docs/dma/` | DMA 控制器、descriptor、地址宽度、ownership 转换 | R05 21-DMA | 待聚合；G5 阻塞 coherency/IOMMU |
 | `docs/network/` | GMAC、PHY、MDIO、RGMII、descriptor ring、interrupt cause/ack | R05 09-GMAC | 待聚合；G3(partial)、G6 阻塞实例与寄存器级描述 |
 | `docs/storage/` | SDHC、UFS、QSPI、SPI 控制器 | R06 08-SDHC / ufs / 07-QSPI / SPI | 待聚合；R06 状态 deferred |

@@ -143,10 +143,10 @@ CoM260 命名集合共 7 个候选, 全部位于 `arch/riscv/boot/dts/spacemit/`
 
 ### 6.2 K3 SoC 顶层 `aliases` 节点
 
-- 当前证据: `k3.dtsi` 已由本 Cycle 在 2026-09-07 直接打开, 根 `#address-cells = <2>; #size-cells = <2>`、`memory@102000000 { reg = <0x1 0x02000000 0x1 0xfe000000> }`、`reserved-memory` 子节点 `#address-cells = <2>; #size-cells = <2>` 已解(详见 §6.6); 但 `aliases` 节点内容(串口别名 `serial0` 指向哪个 UART 实例、是否有 `ethernet0` 等)在 raw 文件中尚未单独提取。
-- 禁止推断: 不由 `chosen { stdout-path = "serial0:115200" }` 反推 `serial0` 绑定的具体 MMIO; 不由 `cpus { timebase-frequency = 24000000 }` 推定 timer 频率; 不由 bootargs 字符串推定 memory 段。
-- 解除条件: 直接读取 `k3.dtsi` 中 `aliases` 节点, 确认 `serial0` 指向 `&uart0` 或其他 UART; 或 com260_hw_resources.md 下载制品中 SoC TRM 给出 aliases 映射。
-- 影响主题: MS04(平台资源, 串口别名)、MS05(中断与时间)、MS06(DMA/IOMMU)。
+- 当前证据: `k3.dtsi` 在 2026-09-07 直接打开, 根 `#address-cells` / `#size-cells` / `memory@102000000` / `reserved-memory` 已解(详见 §6.6); Iteration 001 / T3 在 2026-09-08 由 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3 / §5 / §7 重新观察 `k3.dtsi` 的 `aliases` 节点, 确认 `serial0`..`serial10` → `uart0`..`uart10`、`serial11`..`serial16` → `r_uart0`..`r_uart5`, 其中 `serial0` 静态指向 `&uart0`(base `0xd4017000`)。非串口别名(例如 `ethernet0` 等) 在本文件中仍按未知项保留。
+- 禁止推断: 不由静态 `serial0 = &uart0` 推定 bootloader 最终 cmdline、目标 Kit 顶层 DTS 或 Kit 实际 console; 不由 `cpus { timebase-frequency = 24000000 }` 推定 timer 频率; 不由 bootargs 字符串推定 memory 段; 不由 `serial0` 的静态映射反推 RCPU 串口别名集合的运行行为。
+- 解除条件: 非串口别名(`ethernet0` 等)需直接打开 `k3.dtsi` 的完整 `aliases` 节点, 并补充到 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §5 / §7 静态链; 或 com260_hw_resources.md 下载制品中 SoC TRM 给出 aliases 完整映射。
+- 影响主题: MS04(平台资源; 串口别名静态映射已闭合, 后续扩展到非串口别名)、MS05(中断与时间)、MS06(DMA/IOMMU)。
 
 ### 6.3 CoM260 Kit 上的 PHY 型号与 GMAC 绑定
 
@@ -203,7 +203,7 @@ CoM260 命名集合共 7 个候选, 全部位于 `arch/riscv/boot/dts/spacemit/`
 2. 本文档只在已直接打开的 4 个 DTS / DTSI 文件中记录 model / compatible / include / chosen / &resmem 字段(`k3_com260.dts` / `k3_com260_kit_v02.dts` / `k3_com260.dtsi` / `k3.dtsi`); 其他 4 个 CoM260 命名候选只列文件名, 不写字段。
 3. CoM260 Kit 默认目标 DTS 未被唯一映射, `k3_com260_kit_v02.dts` 仅作"未唯一映射"候选; 名称与产品版本不对齐的事实按本 change design D2(四层事实模型) / D3(精确 URL 登记)标记。
 4. CMA 字段 `alloc-ranges = <1 0x40000000 0 0x20000000>` 来自 `k3_com260.dtsi`; 父节点 `reserved-memory` 在 `k3.dtsi` 中定义 `#address-cells = <2>; #size-cells = <2>`, 两 cell 解码后 CMA 允许区间起点为 `0x140000000`, 大小 `0x20000000`(`512 MiB`)。本文不由此推定 DRAM 总大小或 kernel 加载地址; 不由 `0x140000000` / `0x20000000` 推定 Kit 实际 CMA 预留。
-5. `chosen { bootargs }` 来自 `k3_com260.dtsi`, 不推定 Kit 实际 cmdline; Kit 实际 console 与 cmdline 由 MS07 进一步展开。
+5. `chosen { bootargs }` 来自 `k3_com260.dtsi`, 不推定 Kit 实际 cmdline; Kit 实际 console 与 cmdline 的运行时边界由 MS04 进一步展开(参见 [`../serial/com260-uart.md`](../serial/com260-uart.md) §7.2 / §10.2)。
 6. 文档中所有"型号/型号值"区分四组: (a) K3 SoC 型号(派生自 k3_ds.md), (b) K3 CoM260 Kit 产品版本(来自 com260_user_guide.md V2.0 `K3-CoM260_P1_LP5315B_32X2_v03_20260312`), (c) DTS 命名(`k3_com260*.dts`/`.dtsi`), (d) Linux 分支与 SDK baseline(`k3-br-v1.0.y` / OpenSBI 1.6 / U-Boot 2022.10 / Linux 6.18 / Buildroot 2025.02.6); 任一项不得互推。
 7. docs-buildroot image.md / boot.md 仅作 `交叉验证` 来源; 官网 image.md / boot.md 仍是唯一 `官方事实` 来源, 但正文为 SPA 壳, 实际可见身份为 Vue SPA title="SpacemiT", `partially-observed` 状态保持。com260_user_guide.md 官网 URL 同样为 SPA 壳, 仅 GitHub 对应页可证 V2.0/2026-03-19 与产品版本字段。
 8. docs-buildroot image.md 给出的镜像下载页与 Titan Flasher 使用手册两个外部入口, 不在本文档正文重复登记裸 URL, 视为已登记 image.md 对应行备注的链接目标。

@@ -1,7 +1,7 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: MS01-MS03 已完成, MS04-MS11 待办, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01-MS04 已完成, MS05-MS11 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
@@ -55,7 +55,7 @@
 
 ### MS04 — CoM260 平台控制与串口知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成 CoM260 pinctrl、clock、reset、APBC/CCU、UART 和 console 的可追溯知识包。
 - Rationale: 平台控制资源决定 UART 和其他设备能否访问; 将官网事实、官方 DTS/驱动行为与第三方 PXA UART 经验分层整理, 可避免资源域和初始化顺序被混用。
 - Dependencies: MS03
@@ -66,8 +66,8 @@
 - Verification boundary: 每项内容标明来源、版本、板型、资源域和证据等级; 官网事实、官方源码行为、第三方经验、推论与未知项分开表达。
 - Diagnostic boundary: 资料问题限制在资源域、寄存器、clock/reset、pinmux、IRQ 引用、console 归属或版本差异。
 - Split signals: 若 AP UART 与 RCPU UART 的来源、编程模型或术语无法共享同一文档边界, 在本 milestone 内拆分主题文档, 不新增实现 milestone。
-- Related changes: None
-- Related references: R03, R04, R05, R08, R10, R12
+- Related changes: `establish-k3-com260-platform-uart-baseline` (2026-09-08 收尾, archived): 完成 2 篇产品文档 (`docs/platform/k3-platform-control.md` 313 行 / `docs/serial/com260-uart.md` 316 行, 均 < 450 行); 59 个唯一 URL 来源覆盖 (MS01-MS02 baseline 38 + MS03 Iter 000 新增 6 + Iter 001 新增 7 + MS04 Iter 000 新增 8); 10 个缺口 (G1-G10, G3 partial, Iter 001 / T3 新增 G8 / G9 / G10, 原有 G1-G7 状态保持); delta spec 同步到 `openspec/specs/k3-com260-platform-uart-baseline/spec.md`（5 added, 0 removed, 0 modified）; Iteration 001 / Cycle 001-rework 修复 AP 域地址范围离散集（`uart0, uart2..uart9` 步进 `0x100`, `uart10` 单独 `0xd401f000`）、串口正文 T4-T6 完成状态补全、首行 10 URL 覆盖、§8 第三方外链转本地相对路径; 6/6 tasks 勾选, Plan Review accepted, Act Self-Review 0 Critical / 0 Important / 1 Minor（§12 行数硬编码）。
+- Related references: R03, R04, R05, R08, R10, R12, R13
 
 ### MS05 — CoM260 中断、时间与通知机制知识基线
 
