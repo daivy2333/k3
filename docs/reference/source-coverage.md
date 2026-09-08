@@ -3,7 +3,7 @@
 # 来源覆盖表
 
 > 产品文档通过获批 OpenSpec change 修改；change accepted 后，docs-maintainer 仅按实际结果同步 SNAPSHOT、tasks、M/D/K/R/I 中适用的状态。
-> 字段定义: 唯一键为 `URL`；所有 38 个 URL 由 R01、R04-R08 转录，无新增无遗漏。
+> 字段定义: 唯一键为 `URL`；本表当前含 51 个唯一 URL（MS01-MS02 baseline 38 个 + change `establish-k3-com260-board-boot-baseline` Iteration 000 新增 6 个 + Iteration 001 第一轮新增 3 个 + 修复轮新增 4 个 raw DTS 文件），无遗漏。
 > 修订规则: 行级状态变更需创建 refresh change；本表不记录 refresh 运行历史，只记录当前覆盖。
 
 ## 字段说明
@@ -17,19 +17,19 @@
 | 优先级 | current / future / supporting |
 | 聚合状态 | active / deferred / out-of-scope / supporting |
 | 源端修订 | 页面明确给出时记录，否则写 `unknown` |
-| 观察日期 | 当前统一为 `2026-09-02` |
+| 观察日期 | 每行按本仓库维护者直接观察该页面的日期填写；既有基线 2026-09-02，refresh 基线 2026-09-05，本 change Iteration 000 新增 6 行 + Iteration 001 第一轮新增 3 行 + 修复轮新增 4 行 raw DTS 文件均使用 2026-09-07 |
 | 访问状态 | `observed`: exact URL 的正文已直接取得 / `partially-observed`: 官方目录或检索片段确认来源但未完整取得正文 / `unverified`: 尚无直接或官方目录证据 |
 | 备注 | 缺口、迁移、跨板归属、用途限制 |
 
-## 覆盖表（38 行）
+## 覆盖表（51 行）
 
 | URL | 来源职责 | 目标范围 | 主题位置 | 优先级 | 聚合状态 | 源端修订 | 观察日期 | 访问状态 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs | authority | K3-common | 总入口 | current | active | unknown | 2026-09-02 | partially-observed | M01 单一权威源；K3 全部资料的入口 |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs | authority | K3-common | 总入口 | current | active | unknown | 2026-09-05 | partially-observed | M01 单一权威源；K3 全部资料的入口 |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs/k3_ds.md | official-doc | K3-common | platform | current | active | unknown | 2026-09-02 | partially-observed | K3 SoC datasheet |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs/root_overview.md | official-doc | K3-common | platform | current | active | unknown | 2026-09-02 | partially-observed | K3 SoC root overview |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_com260/root_overview.md | official-doc | CoM260 | platform | current | active | unknown | 2026-09-02 | partially-observed | K3 CoM260 模组 root overview |
-| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_com260/com260_hw_resources.md | official-doc | CoM260 | platform | current | active | unknown | 2026-09-02 | partially-observed | K3 CoM260 模组硬件资源 |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_com260/com260_hw_resources.md | official-doc | CoM260 | platform | current | active | unknown | 2026-09-02 | partially-observed | K3 CoM260 开发套件硬件设计资源；SPA 壳正文未直接取得 |
 | https://www.spacemit.com/community/development-kit/k3-pico-itx | official-product | non-target-board | platform | future | out-of-scope | unknown | 2026-09-02 | partially-observed | K3 Pico-ITX 开发板；非 CoM260 目标板，仅作 cross-validation |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_pico/pico_hw_resources.md | official-doc | non-target-board | platform | future | out-of-scope | unknown | 2026-09-02 | partially-observed | K3 Pico 模组硬件资源；非 CoM260 目标板 |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/device/boot.md | official-doc | K3-common | boot | current | active | unknown | 2026-09-02 | partially-observed | K3 SDK buildroot 启动流程 |
@@ -57,9 +57,22 @@
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/device/peripheral_driver/24-RTC.md | official-doc | K3-common | peripherals | future | deferred | unknown | 2026-09-02 | partially-observed | K3 RTC 驱动说明；非当前目标 |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/device/peripheral_driver/SPI.md | official-doc | K3-common | storage | future | deferred | unknown | 2026-09-02 | partially-observed | K3 SPI 驱动说明；非当前目标 |
 | https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/device/peripheral_driver/ufs.md | official-doc | K3-common | storage | future | deferred | unknown | 2026-09-02 | partially-observed | K3 UFS 驱动说明；非当前目标 |
-| https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/source.md | official-doc | K3-common | workflow-support | current | supporting | unknown | 2026-09-02 | partially-observed | K3 SDK buildroot 源码与构建；作 supporting，不作正文权威 |
-| https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/release_notes/bl-v1.0.y.md | official-doc | K3-common | workflow-support | current | supporting | unknown | 2026-09-02 | partially-observed | K3 SDK buildroot bl-v1.0.y release notes；作 supporting |
-| https://github.com/spacemit-com/docs-buildroot | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-02 | observed | Spacemit 官方 buildroot 文档仓库；只作 cross-validation |
-| https://github.com/spacemit-com/docs-chip | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-02 | observed | Spacemit 官方 chip 文档仓库；只作 cross-validation |
-| https://github.com/spacemit-com/docs-product | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-02 | observed | Spacemit 官方 product 文档仓库；只作 cross-validation |
-| https://github.com/spacemit-com/linux-6.18 | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-02 | observed | Spacemit 官方 linux-6.18 仓库；只作 cross-validation |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/source.md | official-doc | K3-common | workflow-support | current | supporting | unknown | 2026-09-05 | partially-observed | K3 SDK buildroot 源码与构建；作 supporting，不作正文权威 |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/release_notes/bl-v1.0.y.md | official-doc | K3-common | workflow-support | current | supporting | unknown | 2026-09-05 | partially-observed | K3 SDK buildroot bl-v1.0.y release notes；作 supporting |
+| https://github.com/spacemit-com/docs-buildroot | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-05 | observed | Spacemit 官方 buildroot 文档仓库；只作 cross-validation |
+| https://github.com/spacemit-com/docs-chip | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-05 | observed | Spacemit 官方 chip 文档仓库；只作 cross-validation |
+| https://github.com/spacemit-com/docs-product | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-05 | observed | Spacemit 官方 product 文档仓库；只作 cross-validation |
+| https://github.com/spacemit-com/linux-6.18 | supporting-source | K3-common | workflow-support | supporting | supporting | unknown | 2026-09-05 | observed | Spacemit 官方 linux-6.18 仓库；只作 cross-validation |
+| https://github.com/spacemit-com/docs-chip/blob/main/zh/key_stone/k3/k3_docs/k3_ds.md | supporting-source | K3-common | platform | supporting | supporting | 2026-08-25 | 2026-09-07 | observed | K3 SoC datasheet GitHub 对应页（V1.8，2026-08-25 补充 DPU0/DPU1 显示接口说明）；只作 cross-validation，不替代官网；本 Cycle 直接观察确认 |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_com260/com260_ds.md | official-doc | CoM260 | platform | current | active | unknown | 2026-09-07 | partially-observed | CoM260 模组 datasheet 官网；SPA 壳正文未直接取得；不能由 GitHub V1.3 自动代填源端修订 |
+| https://github.com/spacemit-com/docs-product/blob/main/zh/k3_com260/com260_ds.md | supporting-source | CoM260 | platform | current | supporting | 2026-08-25 | 2026-09-07 | observed | CoM260 模组 datasheet GitHub 对应页（V1.3，2026-08-25 更新订货型号存储容量、供电规格、引脚与电气参数）；只作 cross-validation |
+| https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/eco/k3_com260/com260_user_guide.md | official-doc | CoM260 | platform | current | active | unknown | 2026-09-07 | partially-observed | CoM260 Kit user guide 官网；SPA 壳正文未直接取得；不能由 GitHub V2.0 自动代填源端修订；产品版本、文档修订、SDK 版本分离 |
+| https://github.com/spacemit-com/docs-product/blob/main/zh/k3_com260/com260_user_guide.md | supporting-source | CoM260 | platform | current | supporting | 2026-03-19 | 2026-09-07 | observed | CoM260 Kit user guide GitHub 对应页（V2.0，2026-03-19 互换 UART0 RX/TX 位置 + CAM0 调整为 MIPI CSI1 2Lane）；只作 cross-validation；含 `K3-CoM260_P1_LP5315B_32X2_v03_20260312` 产品版本线索，不作 DTS 唯一依据 |
+| https://github.com/spacemit-com/docs-product/blob/main/zh/k3_com260/com260_hw_resources.md | supporting-source | CoM260 | platform | current | supporting | unknown | 2026-09-07 | observed | K3 CoM260 开发套件硬件设计资源 GitHub 对应页（页面标题为"K3 CoM260 开发套件硬件设计资源"，非"模组 hardware resources"）；只作 cross-validation；BOM/原理图/DSN/BRD 下载制品未直接打开不视为已观察 |
+| https://github.com/spacemit-com/docs-buildroot/blob/main/zh/k3_buildroot/device/boot.md | supporting-source | K3-common | boot | supporting | supporting | unknown | 2026-09-07 | observed | K3 SDK buildroot 启动开发指南 GitHub 对应页（覆盖固件布局 eMMC/SD/UFS、SPI-NOR+BLK、SPI-NAND 与 U-Boot Fastboot 刷机流程）；只作 cross-validation；未提供页面版本字段，源端修订记 unknown |
+| https://github.com/spacemit-com/docs-buildroot/blob/main/zh/k3_buildroot/image.md | supporting-source | K3-common | boot | supporting | supporting | unknown | 2026-09-07 | observed | K3 SDK buildroot 镜像 GitHub 对应页（zip 格式镜像供 Titan Flasher 或解压后 fastboot 刷机）；只作 cross-validation；未提供页面版本字段，源端修订记 unknown；下载页为 spacemit.com/community/resources-download/Images%20Collects/K3/Buildroot，K3 通用 |
+| https://github.com/spacemit-com/linux-6.18/tree/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit | supporting-source | K3-common | platform+boot | supporting | supporting | branch k3-br-v1.0.y | 2026-09-07 | observed | Spacemit 官方 Linux 6.18 仓库 K3 分支 DTS 目录（arch/riscv/boot/dts/spacemit）；分支 k3-br-v1.0.y 只作 SDK baseline，目录内容只作 cross-validation；目录含 40 条目（39 文件 + 1 子目录 `lcd/`），其中 CoM260 命名候选 7 个（6 .dts + 1 .dtsi：`k3_com260.dts`、`k3_com260.dtsi`、`k3_com260_ifx.dts`、`k3_com260_ifx2.dts`、`k3_com260_ifx_tq.dts`、`k3_com260_kit_v02.dts`、`k3_com260_tq.dts`）；不选替代 DTS，不登记或引用 Pico 文件 |
+| https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3_com260.dtsi | supporting-source | CoM260 | platform+boot | supporting | supporting | branch k3-br-v1.0.y | 2026-09-07 | observed | Spacemit Linux 6.18 仓库 `k3-br-v1.0.y` 分支 `k3_com260.dtsi` 原始文件；CoM260 共享 base；含 chosen / &resmem / 27 个 rpmi_regulator / thermal zones / display / i2c0 tcpc / i2c5 camera 等；本 Cycle 由 docs-boot-image-dts 直接打开（2026-09-07） |
+| https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3.dtsi | supporting-source | K3-common | platform | supporting | supporting | branch k3-br-v1.0.y | 2026-09-07 | observed | Spacemit Linux 6.18 仓库 `k3-br-v1.0.y` 分支 `k3.dtsi` 原始文件；K3 SoC 顶层 DTSI；定义根 #address-cells/#size-cells=2、memory@102000000（reg = `<0x1 0x02000000 0x1 0xfe000000>`）、reserved-memory 子节点 #address-cells/#size-cells=2；本 Cycle 由 docs-boot-image-dts 直接打开（2026-09-07）|
+| https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3_com260.dts | supporting-source | CoM260 | platform+boot | supporting | supporting | branch k3-br-v1.0.y | 2026-09-07 | observed | Spacemit Linux 6.18 仓库 `k3-br-v1.0.y` 分支 `k3_com260.dts` 原始文件；CoM260 基础款顶层 DTS；`model = "SpacemiT K3 Com260"`、`compatible = "spacemit,k3-com260"`、include k3_com260.dtsi + k3-camera.dtsi、3 摄像头 + 1 flexcan2 + 1 GMAC；本 Cycle 由 docs-boot-image-dts 直接打开（2026-09-07）|
+| https://raw.githubusercontent.com/spacemit-com/linux-6.18/k3-br-v1.0.y/arch/riscv/boot/dts/spacemit/k3_com260_kit_v02.dts | supporting-source | CoM260 | platform+boot | supporting | supporting | branch k3-br-v1.0.y | 2026-09-07 | observed | Spacemit Linux 6.18 仓库 `k3-br-v1.0.y` 分支 `k3_com260_kit_v02.dts` 原始文件；CoM260 Kit 候选顶层 DTS（`v02` 与 user guide 产品版本 `v03` 不一致，未唯一映射）；`model = "SpacemiT K3 Com260 Kit V02"`、`compatible = "spacemit,k3-com260-kit-v02"`、include k3_com260.dtsi(无 camera)、5 flexcan(0-4) + r_flexcan2 + 2 UART(uart4/uart5) + QSPI DMA + GMAC；本 Cycle 由 docs-boot-image-dts 直接打开（2026-09-07）|

@@ -25,7 +25,7 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 类型: external-doc
 - URL: https://www.spacemit.com/community/document/info?lang=zh&nodepath=hardware/key_stone/k3/k3_docs
 - 语言: zh-CN
-- 最近观察修订日期: 2026-09-02 (initial observation baseline, 由 change `establish-k3-doc-foundation` 记录; 源端未公开修订日期, 后续由 refresh change 更新)
+- 最近观察修订日期: 2026-09-05 (initial observation baseline 2026-09-02 由 change `establish-k3-doc-foundation` 记录; 2026-09-05 由 refresh change `establish-k3-source-tracking-baseline` 更新; R01 仍为 SPA 壳, 实际可见身份为 Vue SPA title="SpacemiT", `partially-observed` 状态保持)
 - 用途: 本仓库 M01 指定的唯一权威源; 任何 K3 相关信息变更首先在此确认。
 - 状态: active
 
@@ -106,8 +106,7 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - URLs:
   - https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/source.md
   - https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/release_notes/bl-v1.0.y.md
-- 最近观察日期: 2026-09-02
-- 用途: 锁定 OpenSBI、U-Boot、Linux 与 Buildroot 版本，并跟踪 IMSIC、PCIe、GMAC、NVMe、SD/SDIO、suspend 和外部中断修复。
+- 最近观察日期: 2026-09-05 (由 refresh change `establish-k3-source-tracking-baseline` 更新; 官网两个 URL 仍为 SPA 壳, 实际 SDK baseline 由对应 SpacemiT 官方 GitHub `docs-buildroot` 文档建立, 等级 `交叉验证`: K3 Buildroot SDK v1.0.0-v1.0.7, 核心组件 OpenSBI 1.6 / U-Boot 2022.10 / Linux 6.18 / buildroot 2025.02.6, manifest `k3-br-v1.0.y.xml` → 分支 `k3-br-v1.0.y`)
 - 状态: watch
 
 ## R08 — SpacemiT 官方文档与内核仓库 (交叉验证)
@@ -118,6 +117,37 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
   - https://github.com/spacemit-com/docs-product
   - https://github.com/spacemit-com/docs-buildroot
   - https://github.com/spacemit-com/linux-6.18
-- 最近观察日期: 2026-09-02
-- 用途: 发现官网目录、追踪历史与核对 DTS/compatible/驱动入口；不替代 R01 指定的官网权威正文。
+- 最近观察日期: 2026-09-05 (由 refresh change `establish-k3-source-tracking-baseline` 更新; 四个仓库均已定位 K3 相关路径或分支: `docs-buildroot/tree/main/zh/k3_buildroot`, `docs-chip/tree/main/zh/key_stone/k3`, `docs-product/tree/main/zh/k3_com260`, `linux-6.18/tree/k3-br-v1.0.y`)
 - 状态: supporting
+
+## R09 — Rt-Async-AMP 的 K3 启动与板级适配分析
+
+- 类型: analysis
+- 路径: `.claude/analysis/rt-async-amp-k3-boot-platform.md`
+- 版本: captured 2026-09-08, k3 `573162934e6ebdb6fe5d254c09cd29a922231e15`, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`
+- 用途: 检索第三方 K3 AP/RP 镜像链、FIT 装载地址、RT24 握手、保留内存和刷写边界；不替代 R01 官方事实。
+- 状态: active
+
+## R10 — Rt-Async-AMP 的 K3 共享内存与通知链分析
+
+- 类型: analysis
+- 路径: `.claude/analysis/rt-async-amp-k3-shared-memory.md`
+- 版本: captured 2026-09-08, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`, OpenSBI `7a2df083ed06373c506e2e6f4e09bbd168202f2d`
+- 用途: 检索 AP/RP SRAM 布局、PMA 非缓存窗口、mailbox/APLIC/IMSIC 门铃、`/dev/rt_shm` 以及初始化与唤醒风险。
+- 状态: active
+
+## R11 — Rt-Async-AMP 的 K3 驱动与 StarryOS 异步边界分析
+
+- 类型: analysis
+- 路径: `.claude/analysis/rt-async-amp-k3-drivers.md`
+- 版本: captured 2026-09-08, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`, StarryOS `6fcc602de48217a125d40f1f34635138464a2b9e`
+- 用途: 检索 K3 APLIC/IMSIC、PXA UART、pinctrl、GMAC、UFS、RT24 平台驱动的可复用层次、忙等和 SMP/DMA 边界。
+- 状态: active
+
+## R12 — Rt-Async-AMP 面向 StarryOS 的 K3 复用清单
+
+- 类型: analysis
+- 路径: `.claude/analysis/rt-async-amp-k3-starryos-reuse.md`
+- 版本: captured 2026-09-08, k3 `573162934e6ebdb6fe5d254c09cd29a922231e15`, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`, StarryOS `6fcc602de48217a125d40f1f34635138464a2b9e`
+- 用途: 按优先级检索十组可复用材料、milestone 映射、验证缺口以及尚需补齐的 `rt-async`、`ov-channels`、U-Boot 和板级材料。
+- 状态: active

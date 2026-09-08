@@ -40,13 +40,19 @@
 ## G3. K3 CoM260 实际 GMAC 实例与 PHY 详情
 
 - 分类: 硬件事实
-- 当前证据: R05 的 09-GMAC.md 仅说明 K3 SDK 中 GMAC 驱动的通用用法；R04 的 com260_hw_resources.md 提供 CoM260 模组硬件资源列表，但未直接确认 GMAC 实例编号、MMIO 基地址、PHY 型号、MDIO 地址、PHY 地址、RGMII delay、reset 与 ref clock。
-- 禁止推断: 不得基于 Linux 驱动行为或 DWMAC 默认值反推 CoM260 实际硬件；不得假定 GMAC 实例与 Pico 板相同。
+- 当前证据: R05 的 09-GMAC.md 仅说明 K3 SDK 中 GMAC 驱动的通用用法；R04 的 com260_hw_resources.md 提供 CoM260 模组硬件资源列表，但未直接确认 GMAC 实例编号、MMIO 基地址、PHY 型号、MDIO 地址、PHY 地址、RGMII delay、reset 与 ref clock。Iteration 001 / T11 通过直接打开 `k3_com260.dts` 与 `k3_com260_kit_v02.dts`(linux-6.18 仓库 `k3-br-v1.0.y` 分支, 2026-09-07 观察)补充出:
+  - GMAC 引用 `&eth1`, `max-speed = <1000>`, `phy-mode = "rgmii"`, `snps,reset-gpios = <&gpio 1 5 GPIO_ACTIVE_LOW>`, `snps,reset-delays-us = <0 20000 100000>`, `spacemit,clk-tuning-enable`, `spacemit,clk-tuning-by-delayline`, `spacemit,tx-phase = <47>`, `spacemit,rx-phase = <53>`;
+  - PHY 标识 `ethernet-phy-id001c.c916` + `ethernet-phy-ieee802.3-c22`, reg = 0x1(`k3_com260.dts` 标记为 1, `k3_com260_kit_v02.dts` 标记为 0x1), 启用 `realtek,aldps-enable` / `realtek,clkout-disable` / `realtek,link-poll`(`k3_com260_kit_v02.dts` 改用 `&rgmii1`, 关闭 realtek 属性, 增加 `tx-fifo-depth` / `rx-fifo-depth` / `snps,tso` / `snps,force_sf_dma_mode`);
+  - `&ec_master { master0 { main-device = <&eth1>; } }`, EtherCAT master 绑定 eth1。
+  仍未知: PHY 实物型号(RTL8211F 还是 RTL8211FD 还是其他)、PHY 在 Kit 板上的连接器位置、MDIO/MMIO 寄存器、CoM260 Kit 是否为单 PHY 单网口、reset 与 ref clock 在 Kit 原理图中的具体实现。
+- 禁止推断: 不得基于 Linux 驱动行为或 DWMAC 默认值反推 CoM260 实际硬件；不得假定 GMAC 实例与 Pico 板相同；不得由 PHY 字符串 `ethernet-phy-id001c.c916` 推定 PHY 寄存器布局或 EEPROM 加载流程；不得由 RGMII delayline 值 47/53 推定 Kit 实际值。
 - 解除条件:
   - 取得 CoM260 模组 hardware resources 中关于 GMAC/PHY 的具体字段（实例号、MMIO、PHY 型号、MDIO/RGMII 参数）；
   - 或取得 CoM260 DTS（device tree）源文件并对照 compatible、reg、phy-handle、phy-mode；
   - 形成 R04 子条目的修订记录或新增 R 登记。
+  - 仍需补: 取得 CoM260 Kit 原理图中 PHY 实物型号、PHY 板上位置、MDIO/MMIO 寄存器手册、CoM260 实物网口数量与连接器布局。
 - 影响主题: `docs/network/`（GMAC、PHY、MDIO、RGMII）；间接影响 `docs/platform/`（clock、reset、pinctrl）。
+- 状态变更记录: 2026-09-07 由 `open` 调整为 `partial`, 由 Iteration 001 / T11 直接打开 linux-6.18 `k3-br-v1.0.y` 分支 `k3_com260.dts` / `k3_com260_kit_v02.dts` / `k3_com260.dtsi` 提供 PHY 标识与 GMAC 模式; 仍存 PHY 实例、MMIO、寄存器、Kit 实物连接器未解。
 
 ## G4. AIA / APLIC / IMSIC 地址、IRQ domain 与 hart delivery
 
@@ -81,6 +87,19 @@
   - 形成寄存器偏移、复位值、interrupt cause/mask/ack 与 descriptor 字段定义条目。
 - 影响主题: `docs/network/`（GMAC 寄存器与 descriptor、interrupt ack）；间接影响 `docs/dma/`（descriptor buffer ownership）。
 
+## G7. CoM260 Kit 默认目标 DTS 未唯一映射
+
+- 分类: 硬件事实
+- 当前证据: Iteration 001 / T11 直接打开 linux-6.18 仓库 `k3-br-v1.0.y` 分支 `arch/riscv/boot/dts/spacemit/` 目录, 列出 7 个 CoM260 命名候选(6 .dts + 1 .dtsi 共享 base); `k3_com260.dts`(`model = "SpacemiT K3 Com260"`)、`k3_com260_kit_v02.dts`(`model = "SpacemiT K3 Com260 Kit V02"`)、`k3_com260.dtsi`、`k3.dtsi` 四个文件已被直接打开, 其中 `k3_com260_kit_v02.dts` 名称与 Kit 最接近, 但其名称中的 `v02` 与 com260_user_guide.md V2.0 资料下载部分列出的 CoM260 产品版本 `K3-CoM260_P1_LP5315B_32X2_v03_20260312` 的 `v03` 不一致; 其余 4 个候选(`k3_com260_ifx.dts`、`k3_com260_ifx2.dts`、`k3_com260_ifx_tq.dts`、`k3_com260_tq.dts`)未直接打开, 字段全部留 `未知项`。
+- 禁止推断: 不得由"名称最接近"推定 `k3_com260_kit_v02.dts` 即为 CoM260 Kit 默认目标 DTS; 不得由 `compatible` 字符串推定硬件 layout 差异; 不得由 `model` 字符串推定。
+- 解除条件:
+  - 取得 CoM260 Kit 原理图(com260_hw_resources.md 下载制品)中 DTS 路径或 board 标识;
+  - 或 com260_user_guide.md 后续修订明示对应表;
+  - 或 buildroot defconfig 包含 `BR2_TARGET_KERNEL_DTB` 明确指向某一 DTS;
+  - 解除时需同时更新 `com260-image-and-dts.md` §3 / §4 / §5, 并登记 R04 或 R08 子条目修订。
+- 影响主题: `docs/platform/`(平台资源映射)、`docs/network/`(GMAC/PHY 介质归属)、MS07(EtherCAT 物理通路)。
+- 状态变更记录: 2026-09-07 由 Iteration 001 / T11 新增, 状态 `open`。
+
 ---
 
 ## 缺口状态汇总
@@ -89,13 +108,17 @@
 | --- | --- | --- | --- |
 | G1 | 范围盘点 | open | 2026-09-02 |
 | G2 | 范围盘点 | open | 2026-09-02 |
-| G3 | 硬件事实 | open | 2026-09-02 |
+| G3 | 硬件事实 | partial | 2026-09-07 |
 | G4 | 硬件事实 | open | 2026-09-02 |
 | G5 | 硬件事实 | open | 2026-09-02 |
 | G6 | 硬件事实 | open | 2026-09-02 |
+| G7 | 硬件事实 | open | 2026-09-07 |
 
 ## 缺口与 source-coverage 的对应
 
 - G1、G2 对应 `source-coverage.md` 中观察日期 2026-09-02 的 38 行；未观察子树以「未登记」处理。
 - G3、G4、G5、G6 对应 `source-coverage.md` 中标记为 `active` 但未提供寄存器级描述的 R04/R05 资料行。
+- G3 在 2026-09-07 由 Iteration 001 / T11 部分解除, 仍需 PHY 实例、MMIO、寄存器、Kit 实物连接器进一步证据。
+- G7 由 Iteration 001 / T11 新增, 对应 `source-coverage.md` 中 T7 / T8 / T9 三行(linux-6.18 仓库 `k3-br-v1.0.y` 分支目录、docs-buildroot boot.md、image.md)。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
+- 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。

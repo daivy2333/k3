@@ -12,6 +12,7 @@
 - [三个独立维度](#三个独立维度)
 - [五种刷新结果](#五种刷新结果)
 - [覆盖表与刷新结果的关系](#覆盖表与刷新结果的关系)
+- [首次 refresh 的比较规则、baseline 与停止条件](#首次-refresh-的比较规则baseline-与停止条件)
 - [操作顺序](#操作顺序)
 - [变更与缺口边界](#变更与缺口边界)
 - [中断恢复](#中断恢复)
@@ -82,6 +83,59 @@
 | 一次检查的 `刷新结果` | **不动** | 唯一记录位置 | 不动 |
 | `moved`/`removed` 的旧 URL | 保留行，聚合/访问状态不动，`备注` 记迁移或下架 | `moved: <旧> → <新>` / `removed: <URL>` | 由独立 change 改 |
 | `removed` 或长期不可访问后的缺口 | `备注` 简述 | 经获批 change 引用 `known-gaps.md` | 不动 |
+
+## 首次 refresh 的比较规则、baseline 与停止条件
+
+首次或无正文快照的 refresh 必须在执行前固定: 哪些字段参与结果判定, 哪些字段只建立当前 baseline, 何时真正停止。本节只回答这三个问题, 不改变五种结果、长期状态与刷新结果分离、中断恢复等已有规则。
+
+### 持久字段: 决定结果是否成立
+
+只有 `2026-09-02` 已持久化在覆盖表中的字段才参与结果判定; 它们在 `source-coverage.md` 中能取到上次值, 可与本次观察对照。
+
+| 持久字段 | 含义 | 角色 |
+| --- | --- | --- |
+| `URL` | 覆盖表登记的原始 URL | 可定位性证据 |
+| `来源职责` (type) | `authority` / `official-doc` / `supporting-source` | 身份证据 |
+| `访问状态` | `observed` / `partially-observed` / `unverified` | 上次访问深度证据 |
+| `目标范围` / `主题位置` | 登记的 scope 与 topic | 范围证据 |
+
+只有上述字段的当前值与上次值一致时, 才能记 `unchanged`; 持久字段不匹配时记 `changed` / `moved` / `removed`; 持久字段当前值不可见且无其他信号时记 `unreachable`。
+
+### 新 baseline 字段: 首次观察只建立当前 baseline
+
+下列字段在 `2026-09-02` baseline 中没有上次值, 首次 refresh 不要求它们"与上次一致", 只在 Act Response 中建立**当前 baseline**, 供下一次 refresh 判定 `unchanged` 使用。
+
+| 新 baseline 字段 | 适用来源 | 建立方式 |
+| --- | --- | --- |
+| 导航可达性 (R01/R07 入口子树) | R01, R07 | 静态抓取返回 SPA 壳时只能确认目录身份, 不进入 `unchanged` 判定 |
+| K3 路径 / 默认与 K3 分支 | R08 四仓库 | 显式访问 `tree/main/zh/...` 路径或 `tree/<branch>` 分支后记录 |
+| SDK 版本与组件线索 | R07, R08 fallback | 仅在 R07 官网不可读时, 从对应 SpacemiT 官方 GitHub 文档取得, 标为 `交叉验证` 等级 |
+| Release series 与版本号 | R07 | 同上, 标 `交叉验证` 等级 |
+
+新 baseline 字段的当前观察写入 Act Response, 不进入覆盖表持久列; 下一次 refresh 才能用它们判定 `unchanged` / `changed`。
+
+### SPA 壳分类
+
+R01 与 R07 页面基于 Vue SPA 渲染, 静态抓取 (curl / `web_fetch` 等) 仅返回壳层 (200 OK, `<title>SpacemiT</title>`, 无目录或正文), 现状如下:
+
+- HTTP 成功 + SPA 壳 + 持久字段 (URL, 来源身份, 访问状态) 当前值与上次一致 → 记 `unreachable`, 持久字段不构成"已读取正文"的证据, 不允许越过该结果。
+- HTTP 成功 + SPA 壳 + 持久字段不匹配 → 按 `changed` / `moved` / `removed` 处理。
+- HTTP 失败 / 5xx / DNS / timeout → 记 `unreachable`, 按 D1 处理。
+
+SPA 壳结果为 `unreachable` 时, 允许更新 `观察日期` 与 `访问状态` (仅在有证据支持时); R07 不可读时, 可从对应 SpacemiT 官方 GitHub 文档建立 `交叉验证` 级 SDK baseline, 但 R07 行本身仍为 `unreachable`, fallback 结果不提升为官网事实。
+
+### 真正的停止条件
+
+只有当持久字段也**无法**确认 (URL 已迁移但 R01/R08 找不到替代, 来源身份变更, 集合改变), 且不符合其他四种结果时, 才停止当前 Cycle 并返回 Plan, 不进入第四次尝试。
+
+下列任一条件命中即停止:
+
+- 持久字段中 `URL` 与 `来源职责` 中任一当前值不可见, 且 R01/R08 没有可证替代。
+- 同一 URL 连续 3 次 `unreachable` 仍未取得持久字段证据。
+- 登记集合 (R01/R07/R08) 执行前与批准基线不一致。
+- `required` Evidence 不再满足白名单、必要性、预算或可采集性。
+
+新 baseline 字段缺失 (导航、K3 路径、SDK 版本等) **不**触发停止; 它们只建立当前 baseline。SPA 壳单独**不**触发停止; 它只把结果归为 `unreachable`, 持久字段确认后继续下游 URL。
 
 ## 操作顺序
 
@@ -168,6 +222,7 @@ refresh 与缺口登记是两种不同的处理路径，由结果类型决定走
 - 任意 `removed` 结论缺乏官方信号或显式响应。
 - 同一 URL 连续 3 次 `unreachable` 且无替代来源信号。
 - 当前 refresh change 需要改变本 change 已 accept 的 requirement、scenario 或 design。
+- 首次或无正文快照的 refresh 中, 任一 URL 触发 [真正的停止条件](#真正的停止条件); 必须停止并返回 Plan, 不得把"当前可访问"或"SPA 壳"直接判为 `unchanged`, 也不得用新 baseline 字段的缺失触发停止。
 
 ## 反例
 
