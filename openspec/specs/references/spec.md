@@ -159,3 +159,11 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-08 由 change `establish-k3-com260-platform-uart-baseline` 归档时同步（5 added, 0 removed, 0 modified）
 - 用途: 收录 K3 AP / APBC2 secure / RCPU 三域的 pinctrl / clock / reset / APBC / CCU provider 依赖, UART 17 实例的 MMIO / IRQ / FIFO / threshold / compatible 字段, 静态与运行时 console 路径分层, PXA UART 工程经验适用边界, 以及来源覆盖与未知项导航规则; 是 MS04 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
 - 状态: active
+
+## R14 — K3 CoM260 中断、时间与通知机制基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-com260-interrupt-time-notification-baseline/spec.md`
+- 版本: 2026-09-09 由 change `establish-k3-com260-interrupt-time-notification-baseline` 归档时同步（5 added, 0 removed, 0 modified）
+- 用途: 收录 K3 AP AIA/CLINT/IMSIC/APLIC 与 RCPU PLIC/SysTimer/MSIP/AON timer 的分域拓扑, wired IRQ 与 MSI 路径分层, timer 与软件通知的域边界, AP↔RP mailbox 双向通知链 (mailbox4 ch0/ch1、APLIC source 217、PLIC source 69、IMSIC EID 保留为未知项), 通知与数据状态分离原则, 来源覆盖与未知项四字段导航规则; 是 MS05 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
+- 状态: active

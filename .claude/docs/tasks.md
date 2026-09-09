@@ -1,7 +1,7 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: MS01-MS04 已完成, MS05-MS11 待办, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01-MS05 已完成, MS06-MS11 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
@@ -71,7 +71,7 @@
 
 ### MS05 — CoM260 中断、时间与通知机制知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成 CoM260 AIA、APLIC、IMSIC、timer、mailbox 和设备通知机制的统一知识包。
 - Rationale: 中断控制器、时间源和设备通知共享 hart/context、claim/complete 与清除顺序等术语, 但 AP/RP 域和 wired IRQ/MSI 路径不能相互替代。
 - Dependencies: MS03
@@ -82,8 +82,8 @@
 - Verification boundary: 硬件规范、DTS 路由、官方软件行为和第三方经验明确分层; 缺失地址、delivery 与清除规则保留为未知项。
 - Diagnostic boundary: 资料问题限制在 IRQ domain、控制器拓扑、hart routing、mask、claim/complete、MSI delivery、timer 或通知清除顺序。
 - Split signals: 若 wired IRQ、MSI 与 mailbox 的资料规模或术语冲突使单篇文档难以维护, 在本 milestone 内按机制拆文档。
-- Related changes: None
-- Related references: R03, R05, R07, R08, R10, R11, R12
+- Related changes: `establish-k3-com260-interrupt-time-notification-baseline` (2026-09-09 收尾, archived)
+- Related references: R03, R05, R07, R08, R10, R11, R12, R14
 
 ### MS06 — CoM260 DMA、cache、PMA 与内存所有权知识基线
 

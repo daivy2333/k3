@@ -57,13 +57,16 @@
 ## G4. AIA / APLIC / IMSIC 地址、IRQ domain 与 hart delivery
 
 - 分类: 硬件事实
-- 当前证据: R05 的 16-Clock.md、Reset.md、Timer.md 涉及 K3 clock/reset/timer 但未公开 APLIC 与 IMSIC 的 MMIO 地址、IRQ domain 拓扑、hart routing 规则、mask/ack/complete 协议细节。
-- 禁止推断: 不得用 RISC-V AIA 标准行为直接等同 K3 实现；不得假定 K3 APLIC/IMSIC 寄存器布局与 SiFive 或其他厂商一致。
+- 当前证据:
+  - [`k3-interrupt-and-time.md`](../interrupts/k3-interrupt-and-time.md) 已从 linux-6.18 `k3-br-v1.0.y` 的 `k3.dtsi` 与 binding 交叉验证 AP CLINT `0xe081c000/0x4000`、IMSIC `0xe0400000/0x400000`、APLIC `0xe0804000/0x4000`、`riscv,num-ids = <511>`、`riscv,num-sources = <512>`、16 hart interrupt file 与 `msi-parent = <&simsic>` 静态关系。
+  - [`com260-mailbox-notification.md`](../interrupts/com260-mailbox-notification.md) 按固定 revision 第三方经验记录 mailbox4 的 AP source 217、RP source 69 与双向 handler 链；source→EID、target hart、affinity 和真板投递未由官方来源或本项目运行证据确认。
+- 禁止推断: 不得用 RISC-V AIA 标准行为直接等同 K3 实现；不得假定 K3 APLIC/IMSIC 寄存器布局与 SiFive 或其他厂商一致；不得把 AP source 217、RP source 69、mailbox channel 或 IMSIC EID 视为同一编号空间；不得凭第三方 mailbox 代码关闭本缺口。
 - 解除条件:
   - 取得 K3 SoC 公开寄存器手册（programmer reference 或 datasheet 寄存器章节）；
-  - 或在 R08 的 linux-6.18 仓库定位 K3 APLIC/IMSIC 设备树与驱动初始化源码；
-  - 形成 address、IRQ domain、hart/context、delivery 等事实条目。
+  - 或在 R08 的 linux-6.18 仓库定位 K3 APLIC/IMSIC 驱动初始化、source→EID 与 affinity 路径；
+  - 取得目标 CoM260 配置的运行时 IRQ domain、target hart、mask/ack/complete 和双向 mailbox delivery 证据。
 - 影响主题: `docs/interrupts/`（AIA、APLIC、IMSIC、timer）；间接影响 `docs/serial/` 与 `docs/network/`（驱动 IRQ 接入）。
+- 状态变更记录: 2026-09-09 由 `open` 调整为 `partial`；MS05 Iteration 000 已补齐 AP 静态地址与 APLIC→IMSIC 拓扑，Iteration 001 补充固定 revision mailbox source/handler 经验；寄存器布局、source→EID、target hart、affinity 与真板 delivery 仍未解除。
 
 ## G5. DMA coherency、IOMMU、cache line 与 barrier 规则
 

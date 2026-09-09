@@ -1,9 +1,9 @@
 # SNAPSHOT
 
 > 当前项目状态: `current`
-> 最后同步: 2026-09-08 (Tue Sep 08 2026 19:37:00 GMT+0800) 增量刷新
+> 最后同步: 2026-09-09 (Wed Sep 09 2026 14:42:53 GMT+0800) 增量刷新
 > 同步者: `openspec-docs-maintainer`
-> 同步 revision: `1f572bb` + 未提交 change `establish-k3-com260-platform-uart-baseline` 收尾同步 (MS04 全部产品交付 + 项目级状态; 在 MS03 同步基线之上增量刷新)
+> 同步 revision: `115f387` + 未提交 change `establish-k3-com260-interrupt-time-notification-baseline` 收尾同步 (MS05 全部产品交付 + 项目级状态; 在 MS04 同步基线之上增量刷新)
 
 ## 项目身份
 
@@ -52,9 +52,9 @@
 
 ## 工作区与分支
 
-- 工作区: change `establish-k3-doc-foundation` / `establish-k3-source-tracking-baseline` / `establish-k3-com260-board-boot-baseline` / `establish-k3-com260-platform-uart-baseline` 已分别于 2026-09-05 / 2026-09-05 / 2026-09-08 / 2026-09-08 收尾归档 (MS01 / MS02 / MS03 / MS04); 工作区待常规 commit 的产品代码包括 `docs/index.md` / `docs/boot/com260-boot-chain.md` / `docs/boot/com260-image-and-dts.md` / `docs/platform/com260-board-resources.md` / `docs/platform/k3-soc-overview.md` / `docs/platform/k3-platform-control.md` / `docs/serial/com260-uart.md` / `docs/reference/source-coverage.md` / `docs/reference/known-gaps.md` / `docs/reference/source-refresh.md` 与 `.claude/analysis/rt-async-amp-k3-{boot-platform,drivers,shared-memory,starryos-reuse}.md`。
+- 工作区: change `establish-k3-doc-foundation` / `establish-k3-source-tracking-baseline` / `establish-k3-com260-board-boot-baseline` / `establish-k3-com260-platform-uart-baseline` / `establish-k3-com260-interrupt-time-notification-baseline` 已分别于 2026-09-05 / 2026-09-05 / 2026-09-08 / 2026-09-08 / 2026-09-09 收尾归档 (MS01 / MS02 / MS03 / MS04 / MS05); 工作区待常规 commit 的产品代码包括 `docs/index.md` / `docs/boot/com260-boot-chain.md` / `docs/boot/com260-image-and-dts.md` / `docs/platform/com260-board-resources.md` / `docs/platform/k3-soc-overview.md` / `docs/platform/k3-platform-control.md` / `docs/serial/com260-uart.md` / `docs/interrupts/k3-interrupt-and-time.md` / `docs/interrupts/com260-mailbox-notification.md` / `docs/reference/source-coverage.md` / `docs/reference/known-gaps.md` / `docs/reference/source-refresh.md` 与 `.claude/analysis/rt-async-amp-k3-{boot-platform,drivers,shared-memory,starryos-reuse}.md`。
 - Git 分支: `main`
-- 归档目录: `openspec/changes/archive/2026-09-05-establish-k3-doc-foundation/`, `openspec/changes/archive/2026-09-05-establish-k3-source-tracking-baseline/`, `openspec/changes/archive/2026-09-05-establish-k3-com260-board-boot-baseline/`, `openspec/changes/archive/2026-09-08-establish-k3-com260-platform-uart-baseline/`
+- 归档目录: `openspec/changes/archive/2026-09-05-establish-k3-doc-foundation/`, `openspec/changes/archive/2026-09-05-establish-k3-source-tracking-baseline/`, `openspec/changes/archive/2026-09-05-establish-k3-com260-board-boot-baseline/`, `openspec/changes/archive/2026-09-08-establish-k3-com260-platform-uart-baseline/`, `openspec/changes/archive/2026-09-09-establish-k3-com260-interrupt-time-notification-baseline/`
 
 ## 已建立文档
 
@@ -70,6 +70,8 @@
 - `docs/boot/com260-boot-chain.md`: K3 SoC 启动能力与 K3 CoM260 Kit 已观察到的启动链路 (local boot: Boot ROM → FSBL/SPL → ESOS → OpenSBI → U-Boot → payload/OS; download boot: Boot ROM → U-Boot Fastboot), 介质、SDK 版本边界、未知闭包 (MS03 T10, 202 行)
 - `docs/boot/com260-image-and-dts.md`: K3 CoM260 镜像类型、写入方式、DTS 候选集合 (6 个 .dts + 1 个 .dtsi base, 直接打开 4 个文件), CMA 0x140000000 + DRAM 0x102000000 解码, 缺口闭包 (MS03 T11, 210 行)
 - `docs/serial/com260-uart.md`: K3 SoC 17 个 UART 物理实例 (AP 域 10 + APBC2 secure 1 + RCPU 域 6) 的 DTS 字段、CoM260 UART0 物理接口到 `uart0` 节点与静态 console 链路、来源冲突 (FIFO 深度 256 vs 64) 与固定 revision 第三方 (Rt-Async-AMP/tgoskits PXA UART) 经验; 17 实例矩阵、aliases 映射、`uart10` base 偏移未知项闭包; 首行覆盖 10 个官方直接 URL, §8 第三方外链转本地相对路径 (MS04 Iteration 001 交付, 316 行)
+- `docs/interrupts/k3-interrupt-and-time.md`: K3 AP/RP 中断域分域事实包, 记录 AP CLINT `0xe081c000/0x4000` + 16 hart software/timer interrupts、IMSIC `0xe0400000/0x400000` + 511 IDs / 63 guest IDs / 4/6 index bits、APLIC `0xe0804000/0x4000` + MSI parent IMSIC + 512 wired sources 等官方 `k3.dtsi` 静态拓扑, 第三方 R10-R12 固定 revision 行为单列; U1-U5 未知项各 4 字段, 6 个首行来源元数据与覆盖表精确一致 (MS05 Iteration 000 交付, 152 行)
+- `docs/interrupts/com260-mailbox-notification.md`: K3 CoM260 AP↔RP mailbox 双向通知链, 区分物理 mailbox4 与历史变量 `MBX3` 命名空间, AP→RP mailbox4 ch0 / PLIC source 69、RP→AP ch1 / APLIC source 217, 初始化 drain/clear/enable, ISR FIFO→pending→RAW&EN 重读, AP 32×64 drain 上限, 单槽 waker 与多等待者覆盖风险, 第三方 boot/ioctl self-test 3×100000 spin 的能力与未运行边界; IMSIC EID 保留为未知项; 首行 3 来源、U1-U4 未知项各 4 字段 (MS05 Iteration 001 交付, 187 行)
 
 ## 已建立分析
 
@@ -85,7 +87,8 @@
 - MS02 (来源追踪与人工刷新基线) — `completed` (2026-09-05 收尾, change `establish-k3-source-tracking-baseline` 首次真实 refresh 完成 7 URL 逐 URL 结论与 `交叉验证` 等级 SDK baseline)
 - MS03 (K3 CoM260 板级与启动事实基线) — `completed` (2026-09-08 收尾, change `establish-k3-com260-board-boot-baseline` 完成 platform/boot 主题文档 + 51 URL 覆盖 + 7 个缺口闭包 + 4 个 raw DTS 文件直接打开)
 - MS04 (CoM260 平台控制与串口知识基线) — `completed` (2026-09-08 收尾, change `establish-k3-com260-platform-uart-baseline` 完成 2 篇产品文档 (k3-platform-control 313 行 / com260-uart 316 行) + 59 URL 覆盖 + 10 个缺口 (G3 partial) + 17 实例 UART 矩阵 + 3 个 raw DTS 直接打开 + delta spec 同步 R13; Iter 001 / Cycle 001-rework 修复 AP 域地址范围离散集 (T3-R1)、G8 节点集合 (T5-R1)、§8.6 跨文档一致 (T6-R1))
-- MS05-MS11 — `planned`
+- MS05 (CoM260 中断、时间与通知机制知识基线) — `completed` (2026-09-09 收尾, change `establish-k3-com260-interrupt-time-notification-baseline` 完成 2 篇产品文档 (k3-interrupt-and-time 152 行 / com260-mailbox-notification 187 行) + 62 URL 覆盖 (在 MS04 59 之上新增 3 binding) + 10 个缺口 (G4 由 open 调整为 partial, 其余 G1-G3/G5-G10 状态保持) + delta spec 同步 R14; Iteration 000 / Cycle 000 修复 6 项 blocking (F1-F6: AP APLIC 拓扑结论、IMSIC num-ids、RP UART IRQ 范围、§3 拓扑观察、§4 时间结论、Timer.md/k3.dtsi 观察日期撤销), Iteration 001 / Cycle 000 在同 Cycle 有限返修关闭单一证据语义 blocker; 5/5 tasks 勾选, 两轮 Plan Review 均 accepted)
+- MS06-MS11 — `planned`
 
 ## 关键约束摘要 (指针)
 
@@ -104,8 +107,9 @@
 - R01 权威源 URL — `openspec/specs/references/spec.md`
 - R03-R12 当前有用、持续观察、第三方分析 URL/文档集合 — `openspec/specs/references/spec.md`
 - R13 MS04 delta spec (`openspec/specs/k3-com260-platform-uart-baseline/spec.md`) — `openspec/specs/references/spec.md`
+- R14 MS05 delta spec (`openspec/specs/k3-com260-interrupt-time-notification-baseline/spec.md`) — `openspec/specs/references/spec.md`
 
 ## 同步状态
 
-- `current`: 本次增量刷新同步了 change `establish-k3-com260-platform-uart-baseline` 收尾后的项目状态; MS04 已完成, 2 篇产品文档 (`k3-platform-control.md` 313 行 / `com260-uart.md` 316 行) + 59 URL 覆盖 (在 MS03 51 之上新增 8) + 10 个缺口 (G3 partial, G8 / G9 / G10 由 MS04 Iter 001 / T3 新增) + 17 UART 实例矩阵 + 3 个 raw DTS 直接打开 (k3.dtsi / k3-rdomain.dtsi / 8250_of.c) + delta spec 同步 (5 added) + R13 登记; Iter 001 / Cycle 001-rework 收敛所有地址范围与节点集合歧义。
+- `current`: 本次增量刷新同步了 change `establish-k3-com260-interrupt-time-notification-baseline` 收尾后的项目状态; MS05 已完成, 2 篇产品文档 (`k3-interrupt-and-time.md` 152 行 / `com260-mailbox-notification.md` 187 行) + 62 URL 覆盖 (在 MS04 59 之上新增 3 binding) + 10 个缺口 (G4 由 `open` 调整为 `partial`, 其余 G1-G3 / G5-G10 状态保持) + delta spec 同步 (5 added) + R14 登记; Iteration 000 / Cycle 000 修复 6 项 blocking (F1-F6), Iteration 001 / Cycle 000 在同 Cycle 有限返修关闭单一证据语义 blocker; 两轮 Plan Review 均 `accepted`, 5/5 tasks 勾选, Persisted Evidence `none`, 未触动 `others/` 或产品代码。
 - 任何字段变更需要刷新本文件并把状态从 `current` 保留, 或在新版本失效时标 `stale`。
