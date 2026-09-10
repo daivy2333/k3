@@ -167,3 +167,19 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-09 由 change `establish-k3-com260-interrupt-time-notification-baseline` 归档时同步（5 added, 0 removed, 0 modified）
 - 用途: 收录 K3 AP AIA/CLINT/IMSIC/APLIC 与 RCPU PLIC/SysTimer/MSIP/AON timer 的分域拓扑, wired IRQ 与 MSI 路径分层, timer 与软件通知的域边界, AP↔RP mailbox 双向通知链 (mailbox4 ch0/ch1、APLIC source 217、PLIC source 69、IMSIC EID 保留为未知项), 通知与数据状态分离原则, 来源覆盖与未知项四字段导航规则; 是 MS05 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
 - 状态: active
+
+## R15 — K3 CoM260 DMA、cache、PMA 与内存所有权基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-com260-dma-memory-ownership-baseline/spec.md`
+- 版本: 2026-09-09 由 change `establish-k3-com260-dma-memory-ownership-baseline` 归档时同步（added, removed, modified 数待归档时由 OpenSpec 集成确认）
+- 用途: 收录 K3 DMA 类型与能力按对象分层（通用 DMA controller / 设备内建 DMA / 共享内存通道不互相补值）、CPU 与设备所有权转换可验证、barrier / cache maintenance / 地址宽度与边界规则、PMA 16 entries + Svpbmt K3 silicon 忽略 + AMP window IO 翻转、PMA/PBMT/IOMMU/地址转换四对象不互相替代、来源覆盖与未知项四字段导航规则; 是 MS06 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
+- 状态: active
+
+## R16 — K3 CoM260 GMAC、MDIO、PHY 与网络硬件基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-com260-gmac-network-baseline/spec.md`
+- 版本: 2026-09-10 由 change `establish-k3-com260-gmac-network-baseline` 归档时同步（5 added, 0 removed, 0 modified）
+- 用途: 收录 K3 SoC GMAC 能力、CoM260 模组引出、Kit 板级连接与 DTS 变体四层分层的板级事实, MDIO/PHY/RGMII 静态链与 PHY ID 边界, DWMAC5 MAC/MTL/DMA 与 TX/RX descriptor/data buffer ownership、cache/doorbell、IRQ/reclaim、设备专有错误（descriptor error、TBU/RBU、FBE、reset、link-down）和 `try_lock` 锁竞争分层, 官方/固定 revision 第三方证据等级, 不指定默认 Kit DTS、不由 PHY ID 推定完整器件、不宣称真板运行时 link/IRQ delivery/coherency/IOMMU/reset 恢复已验证; 是 MS07 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
+- 状态: active

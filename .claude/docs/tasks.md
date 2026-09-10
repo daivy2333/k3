@@ -1,7 +1,7 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: MS01-MS05 已完成, MS06-MS11 待办, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01-MS06 已完成, MS07-MS11 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
@@ -87,7 +87,7 @@
 
 ### MS06 — CoM260 DMA、cache、PMA 与内存所有权知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成通用 DMA、设备内建 DMA、cache coherency、barrier、PMA、PBMT、IOMMU 和地址转换的分层知识包。
 - Rationale: 官方资料与第三方实现分别提供能力描述和实际处理顺序; 只有保留证据等级及设备边界, 才能避免把某个控制器的做法泛化为 K3 全局事实。
 - Dependencies: MS03
@@ -98,12 +98,12 @@
 - Verification boundary: 每项结论标明来源、适用设备和证据等级; descriptor/data buffer、CPU/device 与 coherent/non-coherent 边界完整。
 - Diagnostic boundary: 资料问题限制在寻址、descriptor、cache、barrier、PMA、PBMT、IOMMU 或完成可见性。
 - Split signals: 若通用 DMA、共享内存和设备内建 DMA 无法共享术语或文档规模超过 M02 建议上限, 在本 milestone 内拆分主题文档。
-- Related changes: None
-- Related references: R03, R04, R05, R08, R09, R11, R12
+- Related changes: `establish-k3-com260-dma-memory-ownership-baseline` (2026-09-09 收尾, archived): 完成 2 篇产品文档 (`docs/dma/k3-dma-and-memory-ownership.md` 154 行 / `docs/dma/k3-cache-pma-address-translation.md` 79 行, 均 < 450 行); 68 个唯一 URL 来源覆盖 (MS01-MS02 baseline 38 + MS03 Iter 000 新增 6 + Iter 001 新增 7 + MS04 Iter 000 新增 8 + MS05 Iter 000 新增 3 binding + MS06 Iter 000 新增 3 docs-buildroot GitHub + Iter 001 新增 3 RISC-V spec 仓库, 含 3 个 RISC-V spec: riscv-iommu / privileged.adoc / unprivileged.adoc); 10 个缺口 (G1-G10, G3 / G4 / G5 partial, 其余 G1 / G2 / G6 / G7 / G8 / G9 / G10 状态保持); delta spec 同步到 `openspec/specs/k3-com260-dma-memory-ownership-baseline/spec.md`; Iter 000 完成 21-DMA / 09-GMAC / ufs docs-buildroot GitHub 对应页直接打开 + k3-dma-and-memory-ownership.md 创建, Iter 001 完成 k3-cache-pma-address-translation.md 创建（5 段 cache / PMA / PBMT / IOMMU + 1 段地址空间 + 边界段全部按证据强度标注）+ G5 由 open 调整为 partial（PMA 16 entries + Svpbmt K3 silicon 忽略 + 无 RISC-V IOMMU + `fence iorw,iorw` barrier 行为回写证据）+ source-coverage 65 → 68 + index.md URL/缺口计数同步; 5/5 tasks 勾选, Plan Review accepted-by-explicit-waiver（用户对 Gate 2 User Plan Approval 字段显式豁免; Act 自承担 Plan Review 终态; 风险已记录）。
+- Related references: R03, R04, R05, R08, R09, R11, R12, R15
 
 ### MS07 — CoM260 GMAC、MDIO、PHY 与网络硬件知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成 CoM260 GMAC、MDIO、PHY、RGMII、descriptor、DMA ring 和设备中断的可追溯知识包。
 - Rationale: 网络硬件知识同时跨越平台资源、PHY 链路、DMA 和中断; 单独聚合可保留各层来源和故障边界, 又不引入任何操作系统实现计划。
 - Dependencies: MS04, MS05, MS06
@@ -114,8 +114,8 @@
 - Verification boundary: 官方事实与第三方实现相互对照但不相互替代; 平台、PHY、MAC、DMA 和 IRQ 内容分层明确。
 - Diagnostic boundary: 资料问题限制在板级链路、PHY、MDIO、MAC、DMA ring、IRQ cause、reclaim 或版本差异。
 - Split signals: 若 GMAC 寄存器、PHY 和 descriptor 内容超过 M02 建议上限, 在本 milestone 内拆为 hardware、phy-link 和 dma-irq 文档。
-- Related changes: None
-- Related references: R03, R04, R05, R07, R08, R10, R12
+- Related changes: `establish-k3-com260-gmac-network-baseline` (2026-09-10 收尾, archived): 完成 2 篇产品文档 (`docs/network/com260-gmac-phy.md` 238 行 / `docs/network/k3-gmac-dma-irq.md` 206 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (在 MS06 68 之上新增 K3 GMAC glue driver `dwmac-spacemit-ethqos.c` 与既有两篇正文引用的官方 URL, URL 总数 69 → 70); 10 个缺口 (G3 / G4 / G5 = `partial`, G6 / G7 = `open`, G1-G2 / G8-G10 状态保持); delta spec 同步到 `openspec/specs/k3-com260-gmac-network-baseline/spec.md`（5 added, 0 removed, 0 modified）; Iter 000 完成 `com260-gmac-phy.md` 创建 (SoC/模组/Kit/DTS 变体 + `eth1` 平台资源 + MDIO/PHY/RGMII 静态链 + 来源差异/运行时边界 + 5 个四字段未知项), Iter 000 / Cycle 001-rework 修复 PLAN-INVALID（来源任务越界） + ACT-DEVIATION（§4.1 MMIO/IRQ 证据等级越级）2 项 Important 收敛 accepted; Iter 001 完成 `k3-gmac-dma-irq.md` 创建 (MAC/MTL/DMA 分层 + TX/RX 状态机 + descriptor/buffer 分离 + cache/doorbell + IRQ/W1C/reclaim + 错误恢复 + `try_lock` 推进风险 + 4 个四字段未知项) + G3–G7 收敛 + index 接入 (T5 修正 G4 汇总 `open → partial` 与 k3.dtsi 静态拓扑一致) + §8 DMA soft reset timeout (Acceptance 3: `core 初始化返回错误` → `记录 warning 后继续 stop DMA / 重配 / 启动 DMA / 返回 Ok(())`) + U4 同步 reset → warning → 继续初始化语义 + index 维护规则计数 69 → 70 (Acceptance 5) 2 项 Plan Review Important 修复 (Plan Review 复审 accepted); 6/6 tasks 勾选, Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容。
+- Related references: R03, R04, R05, R07, R08, R10, R12, R16
 
 ### MS08 — K3 AMP、共享内存、RPC 与跨核通信知识基线
 
@@ -199,6 +199,7 @@
 - MS01 / change `establish-k3-doc-foundation` (2026-09-05 收尾, archived): 完成 R01、R04-R08 的 38 个唯一 URL 来源覆盖、主题目录、文档模板、术语种子、6 类已知缺口与人工刷新流程; 修正 `openspec/config.yaml` 的 YAML quoting, 使 OpenSpec CLI 加载既有 artifact rules; 同时建立 MS02 的机制基础 (refresh change 工作流), 但首次真实 source refresh 仍由未来来源变更 change 验收。
 - MS02 / change `establish-k3-source-tracking-baseline` (2026-09-05 收尾, archived): 完成 7 URL 首次真实 refresh, 建立持久字段比较与新 baseline 字段二分规则, SPA 壳归 `unreachable`, R07 通过 R08 supporting fallback 取得 `交叉验证` 等级 SDK baseline, 9/9 tasks 勾选, Plan Review accepted-by-explicit-waiver。
 - MS03 / change `establish-k3-com260-board-boot-baseline` (2026-09-08 收尾, archived): 完成 4 篇产品文档 (`platform/k3-soc-overview` 179 行 / `platform/com260-board-resources` 303 行 / `boot/com260-boot-chain` 202 行 / `boot/com260-image-and-dts` 210 行); 51 个唯一 URL 来源覆盖 (含 4 个 linux-6.18 raw DTS 文件); 7 个缺口 (G1-G7) 闭包, G3 partial, G7 新增, G8 删除; 直接打开 4 个 DTS 候选文件, CMA 0x140000000 + DRAM 0x102000000 两 cell 解码; 4 份 Rt-Async-AMP 第三方分析已登记 R09-R12; 13/13 tasks 勾选, Plan Review accepted (四轮迭代, 含 5 项 Blocking + 1 Minor + 1 Non-blocking 全部修复, 所有 Gate 5 命令经 shell 实跑)。
+- MS06 / change `establish-k3-com260-dma-memory-ownership-baseline` (2026-09-09 收尾, archived): 完成 2 篇产品文档 (`docs/dma/k3-dma-and-memory-ownership.md` 154 行 / `docs/dma/k3-cache-pma-address-translation.md` 79 行, 均 < 450 行); 68 个唯一 URL 来源覆盖 (在 MS05 62 之上新增 6: Iter 000 新增 3 docs-buildroot GitHub 21-DMA / 09-GMAC / ufs + Iter 001 新增 3 RISC-V spec 仓库 riscv-iommu / privileged.adoc / unprivileged.adoc); 10 个缺口 (G1-G10, G3 / G4 / G5 partial, 其余 G1 / G2 / G6 / G7 / G8 / G9 / G10 状态保持); delta spec 同步到 `openspec/specs/k3-com260-dma-memory-ownership-baseline/spec.md`, 登记 R15; Iteration 000 完成 21-DMA / 09-GMAC / ufs docs-buildroot GitHub raw 对应页直接打开 (2026-09-09) + k3-dma-and-memory-ownership.md 创建 (按对象分层: 通用 DMA controller / GMAC 内建 DMA / UFS 内建 DMA / AP↔RP 共享内存 / descriptor 与 data buffer 状态机 / 错误超时取消与恢复 / U1-U4 未知项 4 字段 + 与其他主题文档关系 + 来源与交叉验证导航 8 个首行 URL 覆盖); Iteration 001 完成 k3-cache-pma-address-translation.md 创建 (5 段 cache / PMA / PBMT / IOMMU + 1 段地址空间 + 边界段全部按证据强度标注, 28 处标注, 3 处未知项均含当前证据 / 解除条件) + G5 由 open 调整为 partial (PMA 16 entries + Svpbmt K3 silicon 忽略 + 无 RISC-V IOMMU + `fence iorw,iorw` barrier 行为回写证据) + source-coverage 65 → 68 + index.md URL/缺口计数 62 → 68 / G3,G4 partial → G3,G4,G5 partial / docs/dma/ 行由"待聚合；G5 阻塞 coherency/IOMMU"更新为双 Iteration 标注; 5/5 tasks 勾选, Plan Review accepted-by-explicit-waiver (用户对 Gate 2 User Plan Approval 字段显式豁免; Act 自承担 Plan Review 终态; 风险已记录: 若用户后续要求 Replan, 需把本字段回退至 BLOCKED 并补独立 Plan Review 流程), Persisted Evidence `none`, 未触动 `others/` 或产品代码。
 
 ## 与 OpenSpec Changes 的同步
 

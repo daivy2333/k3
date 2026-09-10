@@ -38,6 +38,11 @@
 | async | asynchronous | 异步 | 事件驱动 + waker 通知的执行模型；与 polling 相对。 |
 | waker | waker | 唤醒器 | async 模型中用于通知任务可继续执行的句柄。 |
 | coherency | cache coherency | 缓存一致性 | CPU cache 与设备 DMA 之间的可见性关系；K3 上需逐案确认。 |
+| AMP | Asymmetric Multi-Processing | 非对称多处理 | amp 主题术语；K3 上 AP 与 RCPU 域的固定边界协同模式；生命周期与消息路径分别见 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) 与 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md)。 |
+| RPC | Remote Procedure Call | 远程过程调用 | amp 主题术语；AP↔RP 通过共享 ring 调用的请求/响应协议；与 mailbox 通知分离；通道、错误、Deferred、reset 边界见 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §3-§9。 |
+| ring | ring | 环形缓冲区 | amp / network / dma 主题共用术语；按上下文区分 mailbox channel（硬件通道）、RPC ring（共享内存请求 / 响应 / urgent 通道）、DMA ring（设备内置 DMA 描述符环）；RPC ring 与 DMA ring 在硬件层、所有权模型与 reset 语义均不同，禁止混用；具体见 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §2.1 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) §3。 |
+| doorbell | doorbell | 门铃 | 通知机制术语；按上下文区分 mailbox doorbell（AP↔RP 通知，写 mailbox 硬件 channel 触发对端 IRQ）与 GMAC doorbell（设备内置 DMA 写描述符所有权寄存器）；两层门铃在硬件层、寄存器偏移和 reset 语义均不同，禁止混用；具体见 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §5 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) §5。 |
+| 共享窗口 | shared memory window | 共享内存窗口 | amp 主题术语；AP↔RP 通信使用的物理内存区间；地址、布局、初始化所有权、re-init 与 reset 边界见 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §3 与 §7；不得在两侧将 0 与 `0xc0800000` 视作可互换指针。 |
 
 ## 标题层使用示例
 
