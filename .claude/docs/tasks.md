@@ -1,7 +1,7 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: MS01-MS06 已完成, MS07-MS11 待办, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01-MS08 已完成, MS09-MS11 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
@@ -119,7 +119,7 @@
 
 ### MS08 — K3 AMP、共享内存、RPC 与跨核通信知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成 K3 AP/RP 生命周期、共享窗口、mailbox、ring、RPC、doorbell 和恢复行为的独立知识包。
 - Rationale: Rt-Async-AMP 的核心经验跨越启动、中断与内存域; 独立主题可串联完整调用链, 避免细节散落后失去资源所有权和内存序上下文。
 - Dependencies: MS03, MS05, MS06
@@ -130,8 +130,8 @@
 - Verification boundary: 已读源码、作者声明、缺失实现、推论和未验证行为分别标注; 每条跨仓库调用链记录提交与分支。
 - Diagnostic boundary: 资料问题限制在初始化所有权、地址 alias、PMA/PBMT、ring ordering、通知丢失、错误响应、watchdog re-init 或缺失依赖。
 - Split signals: `rt-async` 或 `ov-channels` 补齐后若形成可独立说明的 RP runtime 或 ring/原子知识域, 在本 milestone 内增加子文档。
-- Related changes: None
-- Related references: R09, R10, R11, R12
+- Related changes: `establish-k3-amp-rpc-baseline` (2026-09-10 收尾, archived): 完成 2 篇产品文档 (`docs/amp/k3-amp-shared-memory-lifecycle.md` 205 行 / `docs/amp/k3-rpc-ring-notification.md` 246 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (在 MS07 70 之上不增减, 复用 boot/DTS/标准 URL 并把 `amp` 主题职责加入既有行); 11 个缺口 (G1–G10 + G11, G4/G5/G7 partial 保持 + G11 新增); delta spec 同步到 `openspec/specs/k3-amp-rpc-baseline/spec.md`（6 added, 0 removed, 0 modified）; R17 登记; Iteration 000 / Cycle 000 完成 T1 (3 条既有官方 URL 增加 `amp` 主题职责) + T2 (创建 `k3-amp-shared-memory-lifecycle.md`, 5 个四字段未知项, 11 个相对链接全部有效, 字段说明在 Plan Review 接受后由同一 Cycle 内部补 `amp`); Iteration 001 / Cycle 000 完成 T3-T7 (创建 `k3-rpc-ring-notification.md` 246 行 + G11 + 五项 AMP/RPC/ring/doorbell/共享窗口术语 + index AMP 入口与计数) 后被 Plan Review 标记 `rework-required` (Acceptance 2 BUSY=1 行为错误 + Act Response 重复); Iteration 001 / Cycle 001-rework 修复 T4-R1 (BUSY=1 描述为"服务端处于可发现请求的弹性窗口") + T4-R2 (父 Cycle Act Response 单一化); Iteration 001 / Cycle 002-rework 修复 T4-R3 (三处 BUSY/NOTIFY 表述越界, 全文 BUSY 仅描述为弹性轮询状态提示, NOTIFY 明确为 BUSY=0 条件动作, 不再声称并发保护); 7/7 tasks 勾选, 两轮 rework 均被 Plan Review accepted (002 终态), Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容, `git diff --check` 退出 0, `openspec validate --strict` 退出 0。
+- Related references: R09, R10, R11, R12, R17
 
 ### MS09 — K3 存储控制器知识基线
 
@@ -200,6 +200,7 @@
 - MS02 / change `establish-k3-source-tracking-baseline` (2026-09-05 收尾, archived): 完成 7 URL 首次真实 refresh, 建立持久字段比较与新 baseline 字段二分规则, SPA 壳归 `unreachable`, R07 通过 R08 supporting fallback 取得 `交叉验证` 等级 SDK baseline, 9/9 tasks 勾选, Plan Review accepted-by-explicit-waiver。
 - MS03 / change `establish-k3-com260-board-boot-baseline` (2026-09-08 收尾, archived): 完成 4 篇产品文档 (`platform/k3-soc-overview` 179 行 / `platform/com260-board-resources` 303 行 / `boot/com260-boot-chain` 202 行 / `boot/com260-image-and-dts` 210 行); 51 个唯一 URL 来源覆盖 (含 4 个 linux-6.18 raw DTS 文件); 7 个缺口 (G1-G7) 闭包, G3 partial, G7 新增, G8 删除; 直接打开 4 个 DTS 候选文件, CMA 0x140000000 + DRAM 0x102000000 两 cell 解码; 4 份 Rt-Async-AMP 第三方分析已登记 R09-R12; 13/13 tasks 勾选, Plan Review accepted (四轮迭代, 含 5 项 Blocking + 1 Minor + 1 Non-blocking 全部修复, 所有 Gate 5 命令经 shell 实跑)。
 - MS06 / change `establish-k3-com260-dma-memory-ownership-baseline` (2026-09-09 收尾, archived): 完成 2 篇产品文档 (`docs/dma/k3-dma-and-memory-ownership.md` 154 行 / `docs/dma/k3-cache-pma-address-translation.md` 79 行, 均 < 450 行); 68 个唯一 URL 来源覆盖 (在 MS05 62 之上新增 6: Iter 000 新增 3 docs-buildroot GitHub 21-DMA / 09-GMAC / ufs + Iter 001 新增 3 RISC-V spec 仓库 riscv-iommu / privileged.adoc / unprivileged.adoc); 10 个缺口 (G1-G10, G3 / G4 / G5 partial, 其余 G1 / G2 / G6 / G7 / G8 / G9 / G10 状态保持); delta spec 同步到 `openspec/specs/k3-com260-dma-memory-ownership-baseline/spec.md`, 登记 R15; Iteration 000 完成 21-DMA / 09-GMAC / ufs docs-buildroot GitHub raw 对应页直接打开 (2026-09-09) + k3-dma-and-memory-ownership.md 创建 (按对象分层: 通用 DMA controller / GMAC 内建 DMA / UFS 内建 DMA / AP↔RP 共享内存 / descriptor 与 data buffer 状态机 / 错误超时取消与恢复 / U1-U4 未知项 4 字段 + 与其他主题文档关系 + 来源与交叉验证导航 8 个首行 URL 覆盖); Iteration 001 完成 k3-cache-pma-address-translation.md 创建 (5 段 cache / PMA / PBMT / IOMMU + 1 段地址空间 + 边界段全部按证据强度标注, 28 处标注, 3 处未知项均含当前证据 / 解除条件) + G5 由 open 调整为 partial (PMA 16 entries + Svpbmt K3 silicon 忽略 + 无 RISC-V IOMMU + `fence iorw,iorw` barrier 行为回写证据) + source-coverage 65 → 68 + index.md URL/缺口计数 62 → 68 / G3,G4 partial → G3,G4,G5 partial / docs/dma/ 行由"待聚合；G5 阻塞 coherency/IOMMU"更新为双 Iteration 标注; 5/5 tasks 勾选, Plan Review accepted-by-explicit-waiver (用户对 Gate 2 User Plan Approval 字段显式豁免; Act 自承担 Plan Review 终态; 风险已记录: 若用户后续要求 Replan, 需把本字段回退至 BLOCKED 并补独立 Plan Review 流程), Persisted Evidence `none`, 未触动 `others/` 或产品代码。
+- MS08 / change `establish-k3-amp-rpc-baseline` (2026-09-10 收尾, archived): 完成 2 篇产品文档 (`docs/amp/k3-amp-shared-memory-lifecycle.md` 205 行 / `docs/amp/k3-rpc-ring-notification.md` 246 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (复用 MS07 70 行, 3 条既有 URL 增加 `amp` 主题职责, 未新增 URL); 11 个缺口 (G1-G10 + G11, G4/G5 partial 与 G7 open 保持, G11 新增承载 ring/RPC 协议闭包); delta spec 同步到 `openspec/specs/k3-amp-rpc-baseline/spec.md` (6 added, 0 removed, 0 modified); 5 项术语新增 (AMP / RPC / ring / doorbell / 共享窗口); 7/7 tasks 勾选, 历经 1 个 initial + 2 个 rework Cycle, 末轮 Plan Review accepted, `Next Cycle: None` / `Next Iteration: None`, Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容, `git diff --check` 退出 0, `openspec validate --strict` 退出 0。
 
 ## 与 OpenSpec Changes 的同步
 

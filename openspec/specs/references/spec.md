@@ -183,3 +183,11 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-10 由 change `establish-k3-com260-gmac-network-baseline` 归档时同步（5 added, 0 removed, 0 modified）
 - 用途: 收录 K3 SoC GMAC 能力、CoM260 模组引出、Kit 板级连接与 DTS 变体四层分层的板级事实, MDIO/PHY/RGMII 静态链与 PHY ID 边界, DWMAC5 MAC/MTL/DMA 与 TX/RX descriptor/data buffer ownership、cache/doorbell、IRQ/reclaim、设备专有错误（descriptor error、TBU/RBU、FBE、reset、link-down）和 `try_lock` 锁竞争分层, 官方/固定 revision 第三方证据等级, 不指定默认 Kit DTS、不由 PHY ID 推定完整器件、不宣称真板运行时 link/IRQ delivery/coherency/IOMMU/reset 恢复已验证; 是 MS07 主题文档与 source-coverage / known-gaps 同步的可追溯契约。
 - 状态: active
+
+## R17 — K3 AMP、共享内存、RPC 与跨核通信基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-amp-rpc-baseline/spec.md`
+- 版本: 2026-09-10 由 change `establish-k3-amp-rpc-baseline` 归档时同步（6 added, 0 removed, 0 modified）
+- 用途: 收录 K3 AP/RP 镜像与握手、共享窗口地址与 alias、初始化所有权与 PMA/PBMT/cache 边界、生命周期状态表、reset/re-init 与未读消息可能丢失、共享 ring + 通知 + 等待者分层、RPC 正常/错误/超时/取消/reset 路径、BUSY 提示语义（不充当锁/互斥门禁）、官方/固定 revision 第三方证据等级, 缺失的 `rt-async` / `ov-channels` / U-Boot K3 分支 / 手册 / 原理图 / 真板日志保留为缺口; 是 MS08 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
+- 状态: active
