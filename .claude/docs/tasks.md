@@ -1,7 +1,7 @@
 # Tasks
 
 > 维护者: `openspec-milestone-planner` 负责 `MSxx` 路线; `openspec-docs-maintainer` 负责状态同步。
-> 当前状态: MS01-MS08 已完成, MS09-MS11 待办, 无进行中任务, 无已承诺待办。
+> 当前状态: MS01-MS09 已完成, MS10-MS12 待办, 无进行中任务, 无已承诺待办。
 
 ## Milestone Roadmap (MSxx)
 
@@ -135,7 +135,7 @@
 
 ### MS09 — K3 存储控制器知识基线
 
-- Status: planned
+- Status: completed
 - Outcome: 形成 QSPI、SPI、SDHC 和 UFS 的控制器、启动关系、数据路径、DMA 与恢复知识包。
 - Rationale: 存储主题共享启动介质和 DMA 术语, 但各控制器的 PHY、命令和错误恢复不同; 聚合时需保留设备边界。
 - Dependencies: MS03, MS06
@@ -146,8 +146,8 @@
 - Verification boundary: 来源覆盖表中的对应页面都有正文落点; 官方事实、官方软件行为和第三方 UFS 经验分开表达。
 - Diagnostic boundary: 资料问题限制在控制器实例、PHY、命令、DMA、IRQ、timeout、recovery 或启动介质关系。
 - Split signals: 若 UFS 内容超过 M02 建议上限或其术语无法与其他存储主题共用, 在本 milestone 内单独成文。
-- Related changes: None
-- Related references: R04, R05, R08, R10, R12
+- Related changes: `establish-k3-storage-controller-baseline` (2026-09-11 收尾, archived): 完成 2 篇产品文档 (`docs/storage/k3-qspi-spi-sdhci.md` 151 行 / `docs/storage/k3-ufs.md` 153 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (在 MS08 70 之上不增减, 4 个存储官网入口由 deferred 改为 active, UFS 复用 1 个 docs-buildroot supporting row); 12 个缺口 (G1-G11 + G12, G3/G4/G5 partial 与 G7 open 保持, G12 新增承载存储控制器板级映射 / 运行路径 / 恢复闭包); 15 项术语新增 (SPI / QSPI / SDHCI / eMMC / UFS / M-PHY / UniPro / UTP / UPIU / UTRD / UTMRD / UCD / PRDT / SCSI / LUN); delta spec 同步到 `openspec/specs/k3-storage-controller-baseline/spec.md`（7 added, 0 removed, 0 modified）; R23 登记; Iteration 000 / Cycle 000 完成 T1 (4 个存储官网入口由 deferred 改为 active, 复用 1 个 UFS docs-buildroot supporting row, URL 总数保持 70) + T2 (创建 `k3-qspi-spi-sdhci.md` 151 行, 5 个 U 字段, 8 个首行 URL 覆盖); Iteration 001 / Cycle 000 完成 T3 (创建 `k3-ufs.md` 153 行, 12 段分层: 范围与证据等级 / SoC 能力与板级可达性 / 静态资源 / 启动关系 / MPHY/UniPro/Link startup / UTP/SCSI descriptor / DMA/cache/doorbell / SCSI/LUN scan / 完成模型 / 错误超时与恢复 / 未知项 U1-U5 / 主题边界与导航, 10 个首行 URL 覆盖 + 固定 revision 第三方 `19219411d` 链接 + U1-U5 4 字段); Iteration 002 / Cycle 000 完成 T4-T6 (G12 板级映射 / 运行路径 / 恢复闭包 + 15 项存储术语 + index.md storage 双入口 / 70/40/12 计数 / docs/storage/ 状态由 `待聚合；R06 状态 deferred` 改为 `已聚合(Iteration 000/001)；G5 partial, G7/G12 open`) 后被 Plan Review 标记 rework-required (R1: 10 个 UFS 术语章节定位与数据结构描述错误 / R2: G12 区块 `k3_ufs/transfer.rs` permalink 指向非固定 revision / R3: change `tasks.md` T4-T6 未勾选 / R4: Act 覆盖响应时删除 Plan Review 区域); 同一 Cycle 内 Act Response `reported → pending` 后做有限修复: R1 修正 M-PHY/UniPro → §5 / UTP/UPIU/UTRD/UTMRD/UCD/PRDT → §6 / SCSI/LUN → §8 章节定位与语义 (UTRD 改 command type / data direction / interrupt bit / OCS / UCD base / response UPIU offset+length / PRDT offset+length; UTMRD 改 "只分配并编程, 未观察到 task-management 提交"; UCD 改 "command UPIU + response UPIU 各 512-byte 对齐区域"; PRDT 移除 DBC 20 bit 第三方数值; UPIU 移除 OCS/response 错误归属; SCSI 列表移除 NOP/QUERY 错误项); R2 把 G12 区块 permalink 从 `github.com/rt-async-amp/tgoskits` 替换为 `github.com/PlaticaIt/StarryOS/blob/19219411d.../k3_ufs/transfer.rs` 与 `k3-ufs.md:68,100` 同款; R3 把 change `tasks.md` 第 6-8 行 `[ ]` 改为 `[x]`; R4 覆盖 Act Response 时未触动 `## Plan Review` 区域; 6/6 tasks 勾选, 末轮 Plan Review accepted, `Next Cycle: None` / `Next Iteration: None`, Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容, `git diff --check` 退出 0, `openspec validate --strict` 退出 0。
+- Related references: R04, R05, R08, R10, R12, R20, R23
 
 ### MS10 — K3 外设总线知识基线
 
@@ -181,6 +181,22 @@
 - Related changes: None
 - Related references: R04, R05, R08
 
+### MS12 — K3 镜像制作、烧录与启动操作知识基线
+
+- Status: planned
+- Outcome: 形成 K3/CoM260 从 SDK 或第三方 OS 产物，到镜像封装、RAM 引导、介质烧录、启动观察和恢复边界的可追溯流程文档。
+- Rationale: MS03 只建立启动和镜像事实，MS09 补齐存储介质与控制器边界；二者都没有系统整理 Titan、Fastboot、SD 卡、FIT/ITB、分区和恢复流程。
+- Dependencies: MS03, MS09
+- Scope: 聚合 Buildroot、Titan、K3-Ubuntu-Images、U-Boot、OpenSBI、manifests、buildroot-ext 等官方或参考仓库资料；整理 bootinfo、FSBL、ESOS、OpenSBI、U-Boot、bootfs/rootfs 与 payload 的产物关系；区分 FIT 内部 load/entry、上传缓冲地址和介质落点；分别记录 U-Boot RAM 临时引导、Fastboot 分区烧录、Titan ZIP、SD 卡整盘镜像和 local boot；记录 FORCE_RECOVERY/FEL、ADB、U-Boot Shell 等入口的前置状态和适用边界；为每条流程提供前置条件、操作顺序、成功判据、失败分层、停止条件和恢复要求；区分官网事实、官方仓库行为、第三方实现、推论和未确认项；形成正式 `docs/boot/` 主题文档，并同步来源覆盖、术语、缺口和索引。
+- Non-goals: 不安装构建或烧录工具；不编译、打包或下载镜像；不连接、复位或操作开发板；不执行 Titan、Fastboot、`mtd erase/write`、`dd`、分区或格式化命令；不写入 UFS、eMMC、SPI-NOR、SD 卡、GPT、bootinfo 或固件分区；不声明任何流程已由本项目真板验证；不把 K3-Ubuntu-Images、Rt-Async-AMP 或其他第三方布局提升为 CoM260 官方规范；不实现 StarryOS 移植、驱动、rootfs 或构建系统。
+- Workload: 中到大；需要跨官方文档、多个官方仓库和固定第三方实现对齐产物名、分区、地址、工具入口及恢复语义，并处理当前不可访问页面。
+- Stable baseline: 后续规划者可以直接判断目标产物应采用哪类封装、通过哪种部署路径进入哪一启动阶段、哪些动作改变持久状态，以及缺少什么证据时必须停止。
+- Verification boundary: 每类产物和部署路径都有来源、适用板型、版本或观察日期；RAM 引导、分区更新、Titan 和 SD 卡路径互不混写；所有命令明确标注来源和“未实跑”状态；破坏性步骤都有前置核对、停止条件和恢复要求；地址、分区、DTS、板型和介质未知项不得由示例补值；文档链接、来源覆盖、术语、缺口与索引一致。
+- Diagnostic boundary: 资料问题可限制在产物生成、FIT/ITB 布局、上传与加载地址、分区映射、Fastboot/Titan 入口、SD 启动选择、启动阶段判读或恢复资料缺失，不与存储驱动实现或真板故障混合。
+- Split signals: 若 Titan/整盘镜像资料与 U-Boot RAM/Fastboot 路径分别形成可独立维护的大型资料集，或任一正文超过 M02 的 500 行建议上限，则在 MS12 内拆分主题文档；仍保持同一 milestone。
+- Related changes: None
+- Related references: R05, R07-R09, R12, R18, R20-R22
+
 ## 进行中
 
 (无)
@@ -201,6 +217,7 @@
 - MS03 / change `establish-k3-com260-board-boot-baseline` (2026-09-08 收尾, archived): 完成 4 篇产品文档 (`platform/k3-soc-overview` 179 行 / `platform/com260-board-resources` 303 行 / `boot/com260-boot-chain` 202 行 / `boot/com260-image-and-dts` 210 行); 51 个唯一 URL 来源覆盖 (含 4 个 linux-6.18 raw DTS 文件); 7 个缺口 (G1-G7) 闭包, G3 partial, G7 新增, G8 删除; 直接打开 4 个 DTS 候选文件, CMA 0x140000000 + DRAM 0x102000000 两 cell 解码; 4 份 Rt-Async-AMP 第三方分析已登记 R09-R12; 13/13 tasks 勾选, Plan Review accepted (四轮迭代, 含 5 项 Blocking + 1 Minor + 1 Non-blocking 全部修复, 所有 Gate 5 命令经 shell 实跑)。
 - MS06 / change `establish-k3-com260-dma-memory-ownership-baseline` (2026-09-09 收尾, archived): 完成 2 篇产品文档 (`docs/dma/k3-dma-and-memory-ownership.md` 154 行 / `docs/dma/k3-cache-pma-address-translation.md` 79 行, 均 < 450 行); 68 个唯一 URL 来源覆盖 (在 MS05 62 之上新增 6: Iter 000 新增 3 docs-buildroot GitHub 21-DMA / 09-GMAC / ufs + Iter 001 新增 3 RISC-V spec 仓库 riscv-iommu / privileged.adoc / unprivileged.adoc); 10 个缺口 (G1-G10, G3 / G4 / G5 partial, 其余 G1 / G2 / G6 / G7 / G8 / G9 / G10 状态保持); delta spec 同步到 `openspec/specs/k3-com260-dma-memory-ownership-baseline/spec.md`, 登记 R15; Iteration 000 完成 21-DMA / 09-GMAC / ufs docs-buildroot GitHub raw 对应页直接打开 (2026-09-09) + k3-dma-and-memory-ownership.md 创建 (按对象分层: 通用 DMA controller / GMAC 内建 DMA / UFS 内建 DMA / AP↔RP 共享内存 / descriptor 与 data buffer 状态机 / 错误超时取消与恢复 / U1-U4 未知项 4 字段 + 与其他主题文档关系 + 来源与交叉验证导航 8 个首行 URL 覆盖); Iteration 001 完成 k3-cache-pma-address-translation.md 创建 (5 段 cache / PMA / PBMT / IOMMU + 1 段地址空间 + 边界段全部按证据强度标注, 28 处标注, 3 处未知项均含当前证据 / 解除条件) + G5 由 open 调整为 partial (PMA 16 entries + Svpbmt K3 silicon 忽略 + 无 RISC-V IOMMU + `fence iorw,iorw` barrier 行为回写证据) + source-coverage 65 → 68 + index.md URL/缺口计数 62 → 68 / G3,G4 partial → G3,G4,G5 partial / docs/dma/ 行由"待聚合；G5 阻塞 coherency/IOMMU"更新为双 Iteration 标注; 5/5 tasks 勾选, Plan Review accepted-by-explicit-waiver (用户对 Gate 2 User Plan Approval 字段显式豁免; Act 自承担 Plan Review 终态; 风险已记录: 若用户后续要求 Replan, 需把本字段回退至 BLOCKED 并补独立 Plan Review 流程), Persisted Evidence `none`, 未触动 `others/` 或产品代码。
 - MS08 / change `establish-k3-amp-rpc-baseline` (2026-09-10 收尾, archived): 完成 2 篇产品文档 (`docs/amp/k3-amp-shared-memory-lifecycle.md` 205 行 / `docs/amp/k3-rpc-ring-notification.md` 246 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (复用 MS07 70 行, 3 条既有 URL 增加 `amp` 主题职责, 未新增 URL); 11 个缺口 (G1-G10 + G11, G4/G5 partial 与 G7 open 保持, G11 新增承载 ring/RPC 协议闭包); delta spec 同步到 `openspec/specs/k3-amp-rpc-baseline/spec.md` (6 added, 0 removed, 0 modified); 5 项术语新增 (AMP / RPC / ring / doorbell / 共享窗口); 7/7 tasks 勾选, 历经 1 个 initial + 2 个 rework Cycle, 末轮 Plan Review accepted, `Next Cycle: None` / `Next Iteration: None`, Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容, `git diff --check` 退出 0, `openspec validate --strict` 退出 0。
+- MS09 / change `establish-k3-storage-controller-baseline` (2026-09-11 收尾, archived): 完成 2 篇产品文档 (`docs/storage/k3-qspi-spi-sdhci.md` 151 行 / `docs/storage/k3-ufs.md` 153 行, 均 < 450 行); 70 个唯一 URL 来源覆盖 (在 MS08 70 之上不增减, 4 个存储官网入口由 `deferred` 改为 `active`, 复用 1 个 docs-buildroot UFS supporting row, URL 总数保持 70); 12 个缺口 (G1-G11 + G12, G3/G4/G5 partial 与 G7 open 保持, G12 新增承载存储控制器板级映射 / 运行路径 / 恢复闭包); 15 项术语新增 (SPI / QSPI / SDHCI / eMMC / UFS / M-PHY / UniPro / UTP / UPIU / UTRD / UTMRD / UCD / PRDT / SCSI / LUN); delta spec 同步到 `openspec/specs/k3-storage-controller-baseline/spec.md` (7 added, 0 removed, 0 modified); R23 登记; Iteration 000 / Cycle 000 完成 T1 (4 个存储官网入口由 `deferred` 改为 `active` 职责, 复用 1 个 docs-buildroot UFS supporting row, URL 总数保持 70) + T2 (创建 `k3-qspi-spi-sdhci.md` 151 行, 5 段 (1 范围 / 2 QSPI / 3 SPI / 4 SDHCI / 5 错误边界与未知项 U1-U5) + 8 个首行 URL 覆盖 + 5 个 U 字段); Iteration 001 / Cycle 000 完成 T3 (创建 `k3-ufs.md` 153 行, 12 段分层: 1 范围与证据等级 / 2 SoC 能力与板级可达性 / 3 静态资源 / 4 启动关系 / 5 MPHY/UniPro/Link startup / 6 UTP/SCSI descriptor (UTRD/UTMRD/UCD/PRDT/UPIU) / 7 DMA/cache/doorbell / 8 SCSI/LUN scan 与 sync block 边界 / 9 完成模型 (轮询, 不注册 IRQ) / 10 错误超时与恢复 / 11 未知项 U1-U5 / 12 主题边界与导航, 10 个首行 URL 覆盖 + 固定 revision 第三方 `19219411d` 链接 + U1-U5 4 字段); Iteration 002 / Cycle 000 完成 T4-T6 (G12 板级映射 / 运行路径 / 恢复闭包 + 15 项存储术语 + index.md storage 双入口 / 70/40/12 计数 / docs/storage/ 状态由 `待聚合；R06 状态 deferred` 改为 `已聚合(Iteration 000/001)；G5 partial, G7/G12 open`) 后被 Plan Review 标记 rework-required (R1: 10 个 UFS 术语章节定位与数据结构描述错误 / R2: G12 区块 `k3_ufs/transfer.rs` permalink 指向非固定 revision / R3: change `tasks.md` T4-T6 未勾选 / R4: Act 覆盖响应时删除 Plan Review 区域); 同一 Cycle 内 Act Response `reported → pending` 后做有限修复: R1 修正 M-PHY/UniPro → §5 / UTP/UPIU/UTRD/UTMRD/UCD/PRDT → §6 / SCSI/LUN → §8 章节定位与语义 (UTRD 改 command type / data direction / interrupt bit / OCS / UCD base / response UPIU offset+length / PRDT offset+length; UTMRD 改 "只分配并编程, 未观察到 task-management 提交"; UCD 改 "command UPIU + response UPIU 各 512-byte 对齐区域"; PRDT 移除 DBC 20 bit 第三方数值; UPIU 移除 OCS/response 错误归属; SCSI 列表移除 NOP/QUERY 错误项); R2 把 G12 区块 permalink 从 `github.com/rt-async-amp/tgoskits` 替换为 `github.com/PlaticaIt/StarryOS/blob/19219411d.../k3_ufs/transfer.rs` 与 `k3-ufs.md:68,100` 同款; R3 把 change `tasks.md` 第 6-8 行 `[ ]` 改为 `[x]`; R4 覆盖 Act Response 时未触动 `## Plan Review` 区域; 6/6 tasks 勾选, 末轮 Plan Review accepted, `Next Cycle: None` / `Next Iteration: None`, Persisted Evidence `none`, 未触动 `others/` 或既有 staged 内容, `git diff --check` 退出 0, `openspec validate --strict` 退出 0。
 
 ## 与 OpenSpec Changes 的同步
 

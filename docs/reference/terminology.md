@@ -43,6 +43,21 @@
 | ring | ring | 环形缓冲区 | amp / network / dma 主题共用术语；按上下文区分 mailbox channel（硬件通道）、RPC ring（共享内存请求 / 响应 / urgent 通道）、DMA ring（设备内置 DMA 描述符环）；RPC ring 与 DMA ring 在硬件层、所有权模型与 reset 语义均不同，禁止混用；具体见 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §2.1 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) §3。 |
 | doorbell | doorbell | 门铃 | 通知机制术语；按上下文区分 mailbox doorbell（AP↔RP 通知，写 mailbox 硬件 channel 触发对端 IRQ）与 GMAC doorbell（设备内置 DMA 写描述符所有权寄存器）；两层门铃在硬件层、寄存器偏移和 reset 语义均不同，禁止混用；具体见 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §5 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) §5。 |
 | 共享窗口 | shared memory window | 共享内存窗口 | amp 主题术语；AP↔RP 通信使用的物理内存区间；地址、布局、初始化所有权、re-init 与 reset 边界见 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §3 与 §7；不得在两侧将 0 与 `0xc0800000` 视作可互换指针。 |
+| SPI | Serial Peripheral Interface | 串行外设接口 | storage 主题术语；K3 上指通用 SPI 控制器（message-oriented），与 QSPI 行为模型不同；实例、pinmux、CoM260 板级连接、driver 形态见 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) §2 / §3。 |
+| QSPI | Quad SPI | 四线 SPI | storage 主题术语；面向 SPI NOR/NAND memory 与 XIP 的 quad/1/2/4 线控制器；与通用 SPI 不可互换；SoC 能力、CoM260 板载器件候选、运行路径与未知项见 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) §2 / §5 / U1。 |
+| SDHCI | SD Host Controller Interface | SD 主机控制器接口 | storage 主题术语；K3 上 SDHC 控制器（兼容 SD/eMMC）的 K3 vendor core；PHY/HS200/HS400/DLL/software RX tuning 见 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) §4 / §6；不与 OS glue、FDT probe、IRQ 注册混用。 |
+| eMMC | embedded MultiMediaCard | 内嵌多媒体卡 | storage 主题术语；与 SD 共用 SDHCI 家族但板级介质、bus width、removable 属性不同；CoM260 板级 mapping 与可证字段见 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) §4 / U3。 |
+| UFS | Universal Flash Storage | 通用闪存存储 | storage 主题术语；K3 上 UFS 2.2 / UniPro 1.6 / M-PHY 3.0 控制器；静态资源、MPHY/UniPro/link、UTP/SCSI、DMA/cache、轮询完成、recovery 与未知项见 [`k3-ufs.md`](../storage/k3-ufs.md)；descriptor/UTRD/UTMRD/UCD/PRDT 不外推到 QSPI/SPI/SDHCI。 |
+| M-PHY | M-PHY | MPHY | storage 主题术语；UFS 的物理层（MIPI M-PHY 3.0）；主写法为 `M-PHY`，`MPHY` 仅作别名；PWM 启动 / HS-G3 升级 / lane 选择 / link startup 边界见 [`k3-ufs.md`](../storage/k3-ufs.md) §5。 |
+| UniPro | Unified Protocol | UniPro 1.6 | storage 主题术语；UFS 的协议层（MIPI UniPro 1.6）；属性读写、PA/DB 与 link startup 边界见 [`k3-ufs.md`](../storage/k3-ufs.md) §5。 |
+| UTP | UFS Transport Protocol | UFS 传输协议 | storage 主题术语；UFS 应用层之上的传输协议（UPIU 容器，承载 COMMAND / RESPONSE / QUERY / NOP OUT 等报文）；与底层 M-PHY/UniPro 分层，不外推到 QSPI/SPI/SDHCI；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| UPIU | UFS Protocol Information Unit | UFS 协议信息单元 | storage 主题术语；UTP 层承载的命令/响应/数据单元；UCD 的 command UPIU 与 response UPIU 各预留 512-byte 对齐区域；OCS 字段位于 UTRD，不在 UPIU response 内；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| UTRD | UTP Transfer Request Descriptor | UTP 传输请求描述符 | storage 主题术语；UFSHCI transfer list 中的传输请求描述符，包含 command type / data direction / interrupt bit、OCS、UCD base、response UPIU offset+length、PRDT offset+length；command UPIU 与 PRDT 由 UTRD 指向的 UCD 承载，task tag 在 command UPIU byte 3，不在 UTRD 字段内；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| UTMRD | UTP Task Management Request Descriptor | UTP 任务管理描述符 | storage 主题术语；UFSHCI transfer list 中的任务管理描述符槽位；本仓库固定 revision 第三方实现只分配并编程 UTMRD，未观察到 task-management 提交；QUERY / NOP OUT / COMMAND / RESPONSE 等报文经保留 transfer slot 的 UTRD/UCD 提交；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| UCD | UTP Command Descriptor | UTP 命令描述符 | storage 主题术语；UFSHCI 的命令描述符，由 UTRD 引用；承载 command UPIU 与 response UPIU 各 512-byte 对齐区域，并引用 PRDT 描述 data buffer 物理地址与长度；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| PRDT | Physical Region Descriptor Table | 物理区描述符表 | storage 主题术语；由 UCD 引用的 data buffer 物理区表，描述物理地址与长度；`prepare_slot` 把 PRDT 链接到 data buffer 并执行 `prepare_for_device`（cache clean + DMA fence）；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
+| SCSI | Small Computer System Interface | 小型计算机系统接口 | storage 主题术语；UFS 应用层使用的命令集（REPORT LUNS / TEST UNIT READY / INQUIRY / READ CAPACITY / READ / WRITE）；UTP 之上的语义，不外推到 QSPI/SPI/SDHCI；NOP OUT 不属 SCSI、QUERY 报文走 UTP/UPIU 容器；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §8。 |
+| LUN | Logical Unit Number | 逻辑单元号 | storage 主题术语；UFS 设备逻辑单元；probe 阶段 NOP OUT / LUN 容量 / UNIT READY / flag 探测与 `register_sync_block` 注册同步块设备路径见 [`k3-ufs.md`](../storage/k3-ufs.md) §8。 |
 
 ## 标题层使用示例
 

@@ -17,8 +17,8 @@
 
 - [来源覆盖表](reference/source-coverage.md): 当前登记 70 个唯一 URL；包含来源职责、目标范围、主题位置、优先级、聚合状态、源端修订、观察日期、访问状态与备注。
 - [主题文档模板](reference/document-template.md): 主题文档的写作约束、可复用骨架与反例；包含单来源/多来源首行、四级证据强度、500 行拆分规则。
-- [术语表](reference/terminology.md): 25 个基础术语的主写法、英文原词、别名与使用说明；标题层只使用主写法。
-- [已知缺口](reference/known-gaps.md): 当前登记 G1-G11 共 11 类缺口；包含当前证据、禁止推断、解除条件与影响主题，其中 G3、G4、G5 为 `partial`。
+- [术语表](reference/terminology.md): 40 个基础术语的主写法、英文原词、别名与使用说明；标题层只使用主写法。
+- [已知缺口](reference/known-gaps.md): 当前登记 G1-G12 共 12 类缺口；包含当前证据、禁止推断、解除条件与影响主题，其中 G3、G4、G5 为 `partial`。
 - [来源刷新指南](reference/source-refresh.md): 人工刷新五种结果（unchanged / changed / moved / removed / unreachable）、操作顺序、change 与缺口边界、中断恢复与三段文字演练；与覆盖表的长期聚合状态、访问状态严格分离。
 
 ## 已聚合主题正文
@@ -47,10 +47,13 @@
 - `docs/amp/`
   - [k3-amp-shared-memory-lifecycle.md](amp/k3-amp-shared-memory-lifecycle.md): K3 AP/RP 镜像装载与握手、共享窗口地址、初始化所有权、内存属性前置（PMA / fence）、失效复位与重新初始化、状态机边界。已聚合(Iteration 000)。
   - [k3-rpc-ring-notification.md](amp/k3-rpc-ring-notification.md): AP↔RP 消息路径：三层编号（共享内存 ring / mailbox 通道 / processor）、BUSY 与发布 fence、doorbell 与 IRQ/waker、Deferred/error/poison、超时与取消、reset 恢复与未决消息；缺失 `ov-channels`/`rt-async` 边界明确。已聚合(Iteration 001)。
+- `docs/storage/`
+  - [k3-qspi-spi-sdhci.md](storage/k3-qspi-spi-sdhci.md): K3 SoC QSPI、普通 SPI 与 SD/eMMC/SDHCI 控制器实例、SoC 能力、CoM260 板级可达性、DTS 资源、启动关系、数据路径、tuning、DMA/IRQ 边界、错误边界与未知项；明确 QSPI 与普通 SPI、SD 与 eMMC、静态节点与运行时路径的差异。已聚合(Iteration 000)。
+  - [k3-ufs.md](storage/k3-ufs.md): K3/CoM260 UFS 能力与资源、MPHY/UniPro/link 初始化、UTRD/UTMRD/UCD/PRDT、SCSI/LUN、DMA/cache、轮询完成、timeout/OCS/fatal 单次 controller recovery retry 与失败 fatal latch 边界；按证据等级区分官方材料与固定 revision 第三方实现。已聚合(Iteration 001)。
 
 ## 主题职责
 
-> 以下十类职责在覆盖表的 `主题位置` 字段已分配；`platform`、`boot`、`serial`、`interrupts`、`network`、`amp` 已聚合正文（见上节），其余 4 类在各自聚合 change 之前不创建空目录或占位正文。
+> 以下十类职责在覆盖表的 `主题位置` 字段已分配；`platform`、`boot`、`serial`、`interrupts`、`network`、`amp`、`storage` 已聚合正文（见上节），其余 3 类在各自聚合 change 之前不创建空目录或占位正文。
 
 | 主题路径 | 职责 | 当前主要来源（R05/R06 编号） | 状态 |
 | --- | --- | --- | --- |
@@ -61,7 +64,7 @@
 | `docs/dma/` | DMA 控制器、descriptor、地址宽度、ownership 转换 | R05 21-DMA | 已聚合(Iteration 000)：k3-dma-and-memory-ownership；已聚合(Iteration 001)：k3-cache-pma-address-translation；G5 partial |
 | `docs/network/` | GMAC、PHY、MDIO、RGMII、descriptor ring、interrupt cause/ack | R05 09-GMAC；linux-6.18 K3 DTS/glue driver；R10-R12 固定 revision 第三方分析 | 已聚合(Iteration 000)：com260-gmac-phy；已聚合(Iteration 001)：k3-gmac-dma-irq；G3/G4/G5 partial，G6/G7 open |
 | `docs/amp/` | AP↔RP 镜像装载、共享窗口地址、初始化所有权、生命周期、消息路径（ring/RPC/doorbell/等待/错误恢复） | R05 boot；linux-6.18 K3 DTS；R09-R11 固定 revision 第三方分析 | 已聚合(Iteration 000)：k3-amp-shared-memory-lifecycle；已聚合(Iteration 001)：k3-rpc-ring-notification；G11 open |
-| `docs/storage/` | SDHC、UFS、QSPI、SPI 控制器 | R06 08-SDHC / ufs / 07-QSPI / SPI | 待聚合；R06 状态 deferred |
+| `docs/storage/` | SDHC、UFS、QSPI、SPI 控制器 | R06 08-SDHC / ufs / 07-QSPI / SPI | 已聚合(Iteration 000)：k3-qspi-spi-sdhci；已聚合(Iteration 001)：k3-ufs；G5 partial，G7/G12 open |
 | `docs/buses/` | I2C、PCIe、CAN、USB、EtherCAT | R06 06-I2C / 11-PCIe / 15-CAN / 10-USB / 22-EtherCAT | 待聚合；R06 状态 deferred |
 | `docs/peripherals/` | GPIO、PWM、IR-RX、Audio、WDT、RTC | R06 02-GPIO / 03-PWM / 04-IR-RX / 17-Audio / 23-WDT / 24-RTC | 待聚合；R06 状态 deferred |
 
@@ -71,7 +74,7 @@
 - 主题目录不创建空 overview 或占位文件；目录的存在与覆盖表的 `主题位置` 一致。
 - 主题文档变更前必须建立测试见证（文件存在、首行合规、相对链接解析、四级证据标注、术语一致）。
 - 源端变更必须创建 refresh change；`source-coverage.md` 之外不静默修改 `> 来源:` 行。
-- 入口页不贴具体技术内容；技术内容只写到主题文档；状态/计数（当前 70 URL、25 术语、11 gaps）随主题文档增量同步，禁止脱离主题文档独立修改。
+- 入口页不贴具体技术内容；技术内容只写到主题文档；状态/计数（当前 70 URL、40 术语、12 gaps）随主题文档增量同步，禁止脱离主题文档独立修改。
 
 ## 与全局约束的关系
 

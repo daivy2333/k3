@@ -165,6 +165,27 @@
 - 影响主题: [`docs/amp/`](../amp/)（[`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §3-§9 与 U1-U5；间接影响 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §6-§9）。与 G4（IRQ 链路）、G5（fence/cache/PMA）、G7（目标 Kit DTS 唯一映射）有交叉但职责互斥：G4 关注 APLIC/IMSIC 寄存器与 source→EID，G5 关注 cache/PMA 真板效果与 IOMMU 启用，G7 关注顶层 DTS 唯一映射，G11 关注消息路径 ring/RPC 协议闭包本身。
 - 状态变更记录: 2026-09-10 由 Iteration 001 新增, 状态 `open`；本 change 仅汇总与登记五项 U 字段，不解除任何子项。
 
+## G12. 存储控制器板级映射、运行路径与恢复闭包
+
+- 分类: 硬件事实
+- 当前证据:
+  - [`docs/storage/k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1（QSPI 板载器件与运行路径）、U2（普通 SPI 实例与板级连接）、U3（SD 与 eMMC 的实例映射）、U4（SDHCI 消费层与完成模型）、U5（错误后的资源和介质状态）登记了非 UFS 存储的板级映射、消费层与恢复缺口；其中 U1/U4/U5 与 [`docs/dma/k3-dma-and-memory-ownership.md`](../dma/k3-dma-and-memory-ownership.md) U1–U4 在 DMA/cache 边界相交，但 QSPI/SPI/SDHCI 专属的 programmer reference、板级介质差异、removable 属性和 SDHCI tuning/HS200/HS400 并不由 G5 承载。
+  - [`docs/storage/k3-ufs.md`](../storage/k3-ufs.md) U1（K3 UFS 专属 binding 缺失）、U2（IRQ 路径未启用）、U3（UFS 容量冲突 C1，与 G7 共享 DTS/容量未知项边界）、U4（同步块 I/O 在 RTOS / SMP 场景下的可扩展性）、U5（controller fatal 重建路径）登记了 UFS 专属 binding、IRQ/完成模型、同步 block 扩展性与 fatal 重建边界；其 U3 与 G7 互斥（G7 关注顶层 DTS 唯一映射，G12 关注 UFS 容量冲突在板级介质与运行路径层面的解读），U2 与 G4 互斥（G4 关注 APLIC/IMSIC 寄存器与 source→EID，G12 关注 UFS FDT IRQ 解析但未注册 handler 的运行层差异）。
+  - 固定 revision 第三方 tgoskits revision `19219411d5dc1515496f910d04c93da12ee95be4` 在 [`k3_ufs/transfer.rs`](https://github.com/PlaticaIt/StarryOS/blob/19219411d5dc1515496f910d04c93da12ee95be4/drivers/ax-driver/src/block/k3_ufs/transfer.rs) 中实现 UTRD/UCD/PRDT、DMA、doorbell、轮询完成与一次 controller recovery retry + fatal latch；固定 tgoskits `k3-sdhci` core（`drivers/blk/k3-sdhci/src/lib.rs`）负责 K3 PHY、SD/eMMC mode、HS200/HS400、DLL 与 software RX tuning，但不负责 OS glue、FDT probe、IRQ 与 block registration。这两类固定第三方实现只解释一种候选变体，不能代表 K3 硬件保证。
+- 禁止推断:
+  - 不得由 tgoskits IFX DTS `spacemit,k3-ufshcd` 节点或 `k3-sdhci` portable core 推定默认 Kit 已启用对应路径或当前运行时使用中断推进；G7 尚未唯一映射顶层 DTS 之前，第三方变体与目标 Kit 不能等同。
+  - 不得把 UFS 的 MPHY/UniPro/UTP/SCSI、DMA/cache、轮询完成、单次 recovery retry 或 fatal latch 行为外推到 QSPI、SPI 或 SDHCI。
+  - 不得由 `k3_ufs` 的 `submit_upiu` 策略（Timeout/OcsError/ControllerFatal → HCE reset + 重建 link/list + NOP + 单次重试 + 失败 fatal latch）推定 K3 官方硬件保证未完成写入可安全重试或硬件复位后数据一致。
+  - 不得由 SDHCI `k3-sdhci` core 存在推定 CoM260 当前 board profile 已启用 HS200/HS400、DLL 或 software RX tuning，也不得由该 core 推定 removable/bus-width 板级配置。
+  - 不得在 U3 容量冲突未解除时裁决 128 GB / 256 GB 容量默认值。
+- 解除条件:
+  - 取得 K3 SoC 公开的 QSPI、SPI、SDHCI、UFS programmer reference 或 datasheet 寄存器章节；
+  - 或在 R08 的 linux-6.18 仓库定位 K3 专属 QSPI/SPI/SDHCI/UFS 设备树与驱动的 binding/寄存器偏移表；
+  - 或在 CoM260 真板取得 QSPI/SPI 板载器件型号、SD/eMMC 板级 mapping、SDHCI tuning/HS mode 配置、UFS 实际容量与 lane 配置、UFS IRQ 注册与完成路径的运行证据；
+  - 形成设备专属 binding/programmer reference、板级介质差异、消费层 glue、完成模型、性能与错误恢复闭包条目。
+- 影响主题: [`docs/storage/`](../storage/)（[`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5）；间接影响 [`docs/platform/`](../platform/com260-board-resources.md)（板级介质与控制器归属）、[`docs/boot/`](../boot/com260-boot-chain.md)（启动介质关系）、[`docs/dma/`](../dma/k3-dma-and-memory-ownership.md)（DMA/cache 边界）、[`docs/interrupts/`](../interrupts/k3-interrupt-and-time.md)（UFS IRQ 路径与 G4 互斥）；与 G5（DMA/cache/coherency）、G7（默认目标 DTS）职责互斥：G5 关注通用 DMA 与 cache 一致性，G7 关注顶层 DTS 唯一映射，G12 关注存储设备专属的板级映射、运行路径与恢复闭包。
+- 状态变更记录: 2026-09-11 由 Iteration 002 新增, 状态 `open`；本 change 仅汇总两篇 storage 正文的十项 U 字段与 G5/G7 的互斥职责，不解除任何子项。
+
 ---
 
 ## 缺口状态汇总
@@ -182,6 +203,7 @@
 | G9 | 硬件事实 | open | 2026-09-08 |
 | G10 | 硬件事实 | open | 2026-09-08 |
 | G11 | 协议/接口 | open | 2026-09-10 |
+| G12 | 硬件事实 | open | 2026-09-11 |
 
 ## 缺口与 source-coverage 的对应
 
@@ -194,5 +216,6 @@
 - G7 由 Iteration 001 / T11 新增, 对应 `source-coverage.md` 中 T7 / T8 / T9 三行(linux-6.18 仓库 `k3-br-v1.0.y` 分支目录、docs-buildroot boot.md、image.md)。
 - G8、G9、G10 由 Iteration 001 / T3 新增, 对应 `source-coverage.md` 中 T11(05-UART.md)、T12(`k3.dtsi` raw)、T13(`k3-rdomain.dtsi` raw)、T14(8250.yaml)、T15(8250_of.c) 五行; 与 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3 / §5 / §10.1 / §10.4 / §10.5 交叉引用。
 - G11 由 Iteration 001 新增, 对应 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) U1-U5 五项子字段; `source-coverage.md` 不新增 URL 行 (G11 登记的是协议闭包, 不在官方来源覆盖表内); 与 G4 / G5 / G7 互不重复, 详见 G11 影响主题字段的职责互斥说明。
+- G12 由 Iteration 002 新增, 对应 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5 共十项子字段; `source-coverage.md` 不新增 URL 行 (Iteration 000 / 001 已把四个存储官网入口 + UFS docs-buildroot supporting row 设为当前职责, URL 总数仍为 70); 与 G5 / G7 互不重复, G5 负责 DMA/cache/coherency、G7 负责默认目标 DTS, G12 负责存储设备专属 binding/programmer reference、板级介质差异、消费层、完成模型、性能与错误恢复闭包, 详见 G12 影响主题字段的职责互斥说明。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
 - 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。

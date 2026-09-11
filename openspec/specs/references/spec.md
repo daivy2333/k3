@@ -191,3 +191,67 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-10 由 change `establish-k3-amp-rpc-baseline` 归档时同步（6 added, 0 removed, 0 modified）
 - 用途: 收录 K3 AP/RP 镜像与握手、共享窗口地址与 alias、初始化所有权与 PMA/PBMT/cache 边界、生命周期状态表、reset/re-init 与未读消息可能丢失、共享 ring + 通知 + 等待者分层、RPC 正常/错误/超时/取消/reset 路径、BUSY 提示语义（不充当锁/互斥门禁）、官方/固定 revision 第三方证据等级, 缺失的 `rt-async` / `ov-channels` / U-Boot K3 分支 / 手册 / 原理图 / 真板日志保留为缺口; 是 MS08 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
 - 状态: active
+
+## R18 — K3 CoM260 串口启动观察手册
+
+- 类型: runbook
+- 路径: `.claude/runbooks/k3-com260-uart-boot.md`
+- 版本: captured 2026-09-11（本次会话用户实跑观察, 后续更新需重跑或新增实跑证据）
+- 用途: 记录 K3 CoM260 Kit 出厂预装 Bianbu Linux 4.0.1 镜像的 USB-TTL 串口启动观察流程, 包括 12V/6A 电源、3 根杜邦线（不接 VCC/5V）接线、`115200 8N1` 串口参数、BootROM→SPL/FSBL→OpenSBI→U-Boot→Linux Kernel→rootfs→systemd→Bianbu→ttyS0 login 启动链、`Bianbu 4.0.1 k3 ttyS0` + `k3 login:` 成功判据、官方预装镜像默认 root 凭据 `root` / `bianbu`、以及密码修改安全提示; 适用范围为 K3 CoM260 Kit 预装 Bianbu 4.0.1 镜像的 local boot 路径, 不覆盖 download boot / BROM-Fastboot / 其它 K3 板卡 / 自编译或非 Bianbu 发行版。
+- 状态: active
+
+## R19 — K3 CoM260 网络开发与文件传输流程 (草稿)
+
+- 类型: runbook (draft)
+- 路径: `.claude/runbooks/k3-com260-network-dev-and-file-transfer.md`
+- 版本: captured 2026-09-11（本次会话用户描述, **未在真板执行**, 全部具体动作 / IP 网段 / U 盘分区路径 / scp 命令均为典型流程整理, 25 处 `⚠️` 标记 + 显式 "采集缺口" 清单）
+- 用途: 描述 K3 CoM260 Kit 通过以太网直连 + SSH/SCP/SFTP + U 盘备用的网络开发与文件传输流程, 涵盖网线直连、同网段 IP (静态 / ICS 两种方案)、SSH 登录、双向 `scp` 传输、U 盘备用 (含 `lsblk` / `mount /dev/sda1 /mnt/usb` 示例, 设备节点仅为示例)、最终开发结构图; 依赖 R18 完成串口启动后 root Shell 可用; 假设根凭据来自 R18; 当前为 draft 状态, 待真板实跑补齐采集缺口后可升级为 active; 不覆盖路由器 / VLAN / 无线 / 跨网段 / 防火墙深入配置 / VS Code Remote 接入。
+- 状态: draft
+
+## R20 — K3 链接缺口与存储来源评估
+
+- 类型: analysis
+- 路径: `.claude/analysis/k3-link-gap-and-storage-source-assessment.md`
+- 版本: captured 2026-09-11, k3 `820535c0bab7b2e58df3c1c01bc6a9e2689ba4a9`
+- 用途: 对照临时候选清单与 `source-coverage.md`，区分已逐 URL 登记、已有语义覆盖、当前 MS09 存储 change 的直接来源缺口，以及仅适用于未来镜像、烧录、OpenSBI 和 StarryOS/ArceOS 移植调查的链接；记录 2026-09-11 GitHub raw DNS 不可达边界。
+- 状态: active
+
+## R21 — K3 镜像、启动与 StarryOS 移植候选网站
+
+- 类型: external-source-set
+- URLs:
+  - https://www.spacemit.com/community/document/info?lang=zh&nodepath=tools%2Fuser_guide%2Fflasher_user_guide
+  - https://github.com/spacemit-com/K3-Ubuntu-Images
+  - https://github.com/spacemit-com/K3-Ubuntu-Images/blob/main/README.rst
+  - https://github.com/spacemit-com/uboot-2022.10
+  - https://github.com/spacemit-com/opensbi
+  - https://github.com/riscv-software-src/opensbi/blob/master/docs/platform/generic.md
+  - https://github.com/riscv-software-src/opensbi/blob/master/docs/platform_guide.md
+  - https://github.com/riscv-software-src/opensbi/blob/master/docs/platform_requirements.md
+  - https://github.com/Starry-OS/StarryOS
+  - https://github.com/arceos-org/arceos
+  - https://github.com/arceos-org/app-helloworld
+  - https://github.com/spacemit-com/manifests
+  - https://github.com/spacemit-com/buildroot
+  - https://github.com/spacemit-com/buildroot-ext
+  - https://github.com/spacemit-com/archlinux-spacemit
+  - https://github.com/spacemit-com/.github/blob/main/upstream-status/toolchain.md
+- 版本: candidate set captured 2026-09-11；本次未直接观察，GitHub raw 访问因 DNS 解析失败退出 6
+- 用途: 为未来 K3 镜像封装、Titan/Fastboot 烧录、厂商启动组件、OpenSBI 平台责任、StarryOS/ArceOS 移植、SDK 组成和工具链调查提供检索入口；不属于当前 MS09 Iteration 000 的直接来源，不支持当前硬件事实或可用性结论。
+- 状态: deferred
+
+## R22 — K3 CoM260 镜像、烧录与真板启动路径分析
+
+- 类型: analysis
+- 路径: `.claude/analysis/k3-image-flashing-and-real-board-bringup.md`
+- 版本: captured 2026-09-11, k3 `820535c0bab7b2e58df3c1c01bc6a9e2689ba4a9`, Rt-Async-AMP `ccb1ff0b487e4f49ea570c41f330741eecece935`, tgoskits `19219411d5dc1515496f910d04c93da12ee95be4`
+- 用途: 检索 K3 官方启动产物、StarryOS/RT24 FIT 构建链、U-Boot RAM 临时引导、ESOS/OpenSBI 持久更新边界、Titan/SD 卡待补条件，以及从出厂基线到 workload 的真板分层 Gate；所有未实跑命令和破坏性写入均有明确边界。
+- 状态: active
+
+## R23 — K3 存储控制器（QSPI、SPI、SDHC、UFS）基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-storage-controller-baseline/spec.md`
+- 版本: 2026-09-11 由 change `establish-k3-storage-controller-baseline` 归档时同步（7 added, 0 removed, 0 modified）
+- 用途: 收录 K3 SoC 与 CoM260 模组的 QSPI / 普通 SPI / SDHC / UFS 四类存储控制器的资源与板级可达性、启动介质关系、数据路径与资源所有权（按控制器分层）、UFS 协议栈与设备边界（MPHY/UniPro/UTP/SCSI/descriptor/DMA/cache）、错误超时与恢复语义、来源冲突与不可达状态处理、存储主题导航与既有基线一致性；明确官方事实、官方软件行为、固定 revision 第三方经验、推论与未知项的等级边界，不把 UFS 行为外推到 QSPI / SPI / SDHC，不把静态 IRQ 描述等同于运行路径使用 IRQ；是 MS09 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
+- 状态: active
