@@ -58,6 +58,19 @@
 | PRDT | Physical Region Descriptor Table | 物理区描述符表 | storage 主题术语；由 UCD 引用的 data buffer 物理区表，描述物理地址与长度；`prepare_slot` 把 PRDT 链接到 data buffer 并执行 `prepare_for_device`（cache clean + DMA fence）；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §6。 |
 | SCSI | Small Computer System Interface | 小型计算机系统接口 | storage 主题术语；UFS 应用层使用的命令集（REPORT LUNS / TEST UNIT READY / INQUIRY / READ CAPACITY / READ / WRITE）；UTP 之上的语义，不外推到 QSPI/SPI/SDHCI；NOP OUT 不属 SCSI、QUERY 报文走 UTP/UPIU 容器；具体见 [`k3-ufs.md`](../storage/k3-ufs.md) §8。 |
 | LUN | Logical Unit Number | 逻辑单元号 | storage 主题术语；UFS 设备逻辑单元；probe 阶段 NOP OUT / LUN 容量 / UNIT READY / flag 探测与 `register_sync_block` 注册同步块设备路径见 [`k3-ufs.md`](../storage/k3-ufs.md) §8。 |
+| I2C | Inter-Integrated Circuit | I²C | buses 主题术语；K3 AP/RP controller、client 与 9/10 路数量冲突见 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) §2；controller 节点不证明板级 client 可用。 |
+| USB | Universal Serial Bus | USB 2.0、USB 3.0 | buses 主题术语；K3 Host/DRD controller、PHY、role 与 Hub 分层见 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) §3-§5。 |
+| DRD | Dual-Role Device | dual-role、OTG | USB controller 可在 host/device 角色间切换的能力；K3 Port A 静态配置与运行边界见 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) §3。 |
+| role switch | USB role switch | usb-role-switch | USB 角色切换对象；DTS 属性只建立切换依赖，不证明方向检测、host/device 切换或恢复成功；见 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) §3 / §5。 |
+| Hub | USB hub | USB Hub、VL817 | USB 下游端口扩展设备；CoM260 Port B 的 USB2/USB3 Hub 静态节点与枚举边界见 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) §4。 |
+| PCIe | PCI Express | PCI Express Gen3 | buses 主题术语；K3 controller、lane/PHY、RC/EP 与 CoM260 M.2 插槽的静态拓扑和运行边界见 [`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) §2-§4。 |
+| RC | Root Complex | PCIe Root Complex | PCIe 根复合体角色；controller/PHY 静态配置不证明 link training、枚举或端点驱动成功；见 [`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) §2 / §3。 |
+| EP | Endpoint | PCIe Endpoint | PCIe 端点角色；K3 SoC 能力不代表任一具体端口已选择 EP 模式；见 [`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) §2。 |
+| FlexCAN | Flexible Controller Area Network | flexcan | K3 AP/RP CAN controller 的节点/IP 名称；与收发器、连接器和 CAN-FD 运行能力分层；见 [`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) §5 / §6。 |
+| CAN-FD | Controller Area Network Flexible Data-Rate | CAN FD | CAN 可变数据速率协议；Kit 接口名称不证明所有 FlexCAN controller 的位时序、payload 或驱动模式；见 [`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) §5-§8。 |
+| EtherCAT | Ethernet for Control Automation Technology | EtherCAT protocol | buses 主题术语；CoM260 shared DTS 只提供 `ec_master → eth1` 静态依赖，协议配置与运行边界见 [`k3-ethercat.md`](../buses/k3-ethercat.md)。 |
+| master | EtherCAT master | `ec_master`、`master0` | 本表限定为 EtherCAT 主站软件/对象，不泛指其他协议主设备；静态节点、软件组成与生命周期边界见 [`k3-ethercat.md`](../buses/k3-ethercat.md) §2-§4。 |
+| slave | EtherCAT slave | EtherCAT 从站 | 本表限定为 EtherCAT 从站设备；当前没有 K3 slave 清单、发现结果、拓扑或真板日志；见 [`k3-ethercat.md`](../buses/k3-ethercat.md) §3-§6。 |
 
 ## 标题层使用示例
 

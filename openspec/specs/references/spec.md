@@ -255,3 +255,11 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-11 由 change `establish-k3-storage-controller-baseline` 归档时同步（7 added, 0 removed, 0 modified）
 - 用途: 收录 K3 SoC 与 CoM260 模组的 QSPI / 普通 SPI / SDHC / UFS 四类存储控制器的资源与板级可达性、启动介质关系、数据路径与资源所有权（按控制器分层）、UFS 协议栈与设备边界（MPHY/UniPro/UTP/SCSI/descriptor/DMA/cache）、错误超时与恢复语义、来源冲突与不可达状态处理、存储主题导航与既有基线一致性；明确官方事实、官方软件行为、固定 revision 第三方经验、推论与未知项的等级边界，不把 UFS 行为外推到 QSPI / SPI / SDHC，不把静态 IRQ 描述等同于运行路径使用 IRQ；是 MS09 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
 - 状态: active
+
+## R24 — K3 外设总线（I2C、USB、PCIe、CAN、EtherCAT）基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-peripheral-bus-baseline/spec.md`
+- 版本: 2026-09-12 由 change `establish-k3-peripheral-bus-baseline` 归档时同步（7 added, 0 removed, 0 modified）
+- 用途: 收录 K3 I2C / USB / PCIe / CAN / EtherCAT 五类总线的 SoC 能力、控制器资源、对象边界（I2C controller/client、USB PHY/Host/DRD/role switch/Hub、PCIe RC/EP/PCIe PHY/lane、FlexCAN 与 CAN-FD、收发器、EtherCAT master）与板级可达性分层、静态拓扑与运行能力分离（PCIe 静态 vs 枚举/枚举/MSI、CAN 三层分离、EtherCAT master 复用 MS07 GMAC 基线）、来源冲突与不可达状态处理、总线导航与既有 MS03/MS04/MS05/MS07 基线的一致性；明确官方事实、官方软件行为、推论与未知项的等级边界，不把 SoC 控制器存在、节点、phandle、收发器或连接器声明为枚举/通信/协议运行成功；是 MS10 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
+- 状态: active

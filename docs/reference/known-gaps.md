@@ -105,15 +105,15 @@
 ## G7. CoM260 Kit 默认目标 DTS 未唯一映射
 
 - 分类: 硬件事实
-- 当前证据: Iteration 001 / T11 直接打开 linux-6.18 仓库 `k3-br-v1.0.y` 分支 `arch/riscv/boot/dts/spacemit/` 目录, 列出 7 个 CoM260 命名候选(6 .dts + 1 .dtsi 共享 base); `k3_com260.dts`(`model = "SpacemiT K3 Com260"`)、`k3_com260_kit_v02.dts`(`model = "SpacemiT K3 Com260 Kit V02"`)、`k3_com260.dtsi`、`k3.dtsi` 四个文件已被直接打开, 其中 `k3_com260_kit_v02.dts` 名称与 Kit 最接近, 但其名称中的 `v02` 与 com260_user_guide.md V2.0 资料下载部分列出的 CoM260 产品版本 `K3-CoM260_P1_LP5315B_32X2_v03_20260312` 的 `v03` 不一致; 其余 4 个候选(`k3_com260_ifx.dts`、`k3_com260_ifx2.dts`、`k3_com260_ifx_tq.dts`、`k3_com260_tq.dts`)未直接打开, 字段全部留 `未知项`。[`com260-gmac-phy.md`](../network/com260-gmac-phy.md) 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) 均按变体和证据等级保留该边界。[`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §8 U1 与 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §10 U1 均把"目标 CoM260 实际 AMP 镜像与共享 ring 节点"留作 G7 的二级证据指针；DTS 唯一映射未解除前，第三方 IFX DTS 与目标 Kit DTS 仍不能等同。
+- 当前证据: Iteration 001 / T11 直接打开 linux-6.18 仓库 `k3-br-v1.0.y` 分支 `arch/riscv/boot/dts/spacemit/` 目录, 列出 7 个 CoM260 命名候选(6 .dts + 1 .dtsi 共享 base); `k3_com260.dts`(`model = "SpacemiT K3 Com260"`)、`k3_com260_kit_v02.dts`(`model = "SpacemiT K3 Com260 Kit V02"`)、`k3_com260.dtsi`、`k3.dtsi` 四个文件已被直接打开, 其中 `k3_com260_kit_v02.dts` 名称与 Kit 最接近, 但其名称中的 `v02` 与 com260_user_guide.md V2.0 资料下载部分列出的 CoM260 产品版本 `K3-CoM260_P1_LP5315B_32X2_v03_20260312` 的 `v03` 不一致; 其余 4 个候选(`k3_com260_ifx.dts`、`k3_com260_ifx2.dts`、`k3_com260_ifx_tq.dts`、`k3_com260_tq.dts`)未直接打开, 字段全部留 `未知项`。[`com260-gmac-phy.md`](../network/com260-gmac-phy.md) 与 [`k3-gmac-dma-irq.md`](../network/k3-gmac-dma-irq.md) 均按变体和证据等级保留该边界。[`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §8 U1 与 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §10 U1 均把"目标 CoM260 实际 AMP 镜像与共享 ring 节点"留作 G7 的二级证据指针；[`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md)、[`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) 与 [`k3-ethercat.md`](../buses/k3-ethercat.md) 也分别保留 controller/client/PHY、PCIe/CAN 连接和 `ec_master → eth1` 对目标 DTB 的依赖。DTS 唯一映射未解除前，这些 shared/top-level DTS 候选不能代表默认 Kit 配置。
 - 禁止推断: 不得由"名称最接近"推定 `k3_com260_kit_v02.dts` 即为 CoM260 Kit 默认目标 DTS; 不得由 `compatible` 字符串推定硬件 layout 差异; 不得由 `model` 字符串推定；不得由 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) 的第三方 DTS 注释推定目标 Kit 同样使用该 `0xc0800000/0x19000` 节点。
 - 解除条件:
   - 取得 CoM260 Kit 原理图(com260_hw_resources.md 下载制品)中 DTS 路径或 board 标识;
   - 或 com260_user_guide.md 后续修订明示对应表;
   - 或 buildroot defconfig 包含 `BR2_TARGET_KERNEL_DTB` 明确指向某一 DTS;
   - 解除时需同时更新 `com260-image-and-dts.md` §3 / §4 / §5, 并登记 R04 或 R08 子条目修订。
-- 影响主题: `docs/platform/`(平台资源映射)、`docs/network/`(GMAC/PHY 介质归属)、MS07(EtherCAT 物理通路)、`docs/amp/`（[`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §8 U1 + [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §10 U1 沿用 G7 的 DTS 唯一映射边界）。
-- 状态变更记录: 2026-09-07 由 Iteration 001 / T11 新增, 状态 `open`；2026-09-09 两篇 network 正文完成后状态保持 `open`；2026-09-10 由 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) 与 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) Iteration 001 增加共享 ring 节点 / `0xc0800000/0x19000` 节点与 G7 的二级证据指针，状态仍保持 `open`，未取得产品版本到顶层 DTS 的新映射证据。
+- 影响主题: `docs/platform/`(平台资源映射)、`docs/network/`(GMAC/PHY 介质归属)、`docs/buses/`（I2C/USB/PCIe/CAN/EtherCAT 板级映射）、`docs/amp/`（[`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) §8 U1 + [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) §10 U1 沿用 G7 的 DTS 唯一映射边界）。
+- 状态变更记录: 2026-09-07 由 Iteration 001 / T11 新增, 状态 `open`；2026-09-09 两篇 network 正文完成后状态保持 `open`；2026-09-10 由 [`k3-amp-shared-memory-lifecycle.md`](../amp/k3-amp-shared-memory-lifecycle.md) 与 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) Iteration 001 增加共享 ring 节点 / `0xc0800000/0x19000` 节点与 G7 的二级证据指针；2026-09-12 三篇 buses 正文增加 I2C/USB/PCIe/CAN/EtherCAT 二级指针。状态仍为 `open`，未取得产品版本到顶层 DTS 的新映射证据。
 
 ## G8. K3 SoC `uart10` base 偏移
 
@@ -186,6 +186,15 @@
 - 影响主题: [`docs/storage/`](../storage/)（[`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5）；间接影响 [`docs/platform/`](../platform/com260-board-resources.md)（板级介质与控制器归属）、[`docs/boot/`](../boot/com260-boot-chain.md)（启动介质关系）、[`docs/dma/`](../dma/k3-dma-and-memory-ownership.md)（DMA/cache 边界）、[`docs/interrupts/`](../interrupts/k3-interrupt-and-time.md)（UFS IRQ 路径与 G4 互斥）；与 G5（DMA/cache/coherency）、G7（默认目标 DTS）职责互斥：G5 关注通用 DMA 与 cache 一致性，G7 关注顶层 DTS 唯一映射，G12 关注存储设备专属的板级映射、运行路径与恢复闭包。
 - 状态变更记录: 2026-09-11 由 Iteration 002 新增, 状态 `open`；本 change 仅汇总两篇 storage 正文的十项 U 字段与 G5/G7 的互斥职责，不解除任何子项。
 
+## G13. 外设总线板级映射、运行路径与恢复闭包
+
+- 分类: 硬件事实与协议/接口
+- 当前证据: [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md) 记录 I2C controller/client、I²C 9/10 数量冲突、USB controller/PHY/Host/DRD/role switch/Hub 和 USB/PCIe 共享 PHY；[`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) 记录 PCIe controller/lane/PHY/RC/EP、插槽、AP/RP FlexCAN、CAN-FD、收发器和 C2 板级冲突；[`k3-ethercat.md`](../buses/k3-ethercat.md) 记录 `ec_master → master0 → main-device = <&eth1>` 静态绑定。三篇正文都区分静态能力、DTS 候选、板级连接和运行结果，但官方 Buildroot 正文未直接取得，controller 到接口的唯一映射、软件组成、周期/同步及错误恢复仍缺证据。
+- 禁止推断: 不得裁决 I²C 9/10 数量差异、USB/PCIe PHY mux、PCIe controller 到 M.2 插槽映射、CAN C2 冲突或默认目标 DTS；不得由节点、phandle、PHY、收发器或连接器存在声明设备枚举、CAN 通信、EtherCAT slave 发现、周期/同步达标或恢复成功。
+- 解除条件: 取得适用同一 CoM260 产品修订的原理图、BOM、完整目标 DTB，以及 K3 I2C/USB/PCIe/CAN/EtherCAT 官方正文、binding 或驱动；在明确板型和软件版本上观察 controller/PHY/接口映射、probe/枚举/通信、错误结果与恢复路径；EtherCAT 还需记录 master/slave 配置和周期/同步测量。
+- 影响主题: `docs/buses/` 三篇正文及 `docs/platform/` 板级资源；与 G3/G4/G5/G7 职责互斥：G3 负责 GMAC/PHY 详情，G4 负责 IRQ delivery，G5 负责 DMA/cache/IOMMU，G7 负责默认目标 DTS，G13 负责总线设备专属的板级映射、软件运行路径和恢复闭包。
+- 状态变更记录: 2026-09-12 由 MS10 Iteration 003 新增，状态 `open`；本 change 只汇总三篇 buses 正文的未知项，不解除任何子项。
+
 ---
 
 ## 缺口状态汇总
@@ -204,6 +213,7 @@
 | G10 | 硬件事实 | open | 2026-09-08 |
 | G11 | 协议/接口 | open | 2026-09-10 |
 | G12 | 硬件事实 | open | 2026-09-11 |
+| G13 | 硬件事实与协议/接口 | open | 2026-09-12 |
 
 ## 缺口与 source-coverage 的对应
 
@@ -217,5 +227,6 @@
 - G8、G9、G10 由 Iteration 001 / T3 新增, 对应 `source-coverage.md` 中 T11(05-UART.md)、T12(`k3.dtsi` raw)、T13(`k3-rdomain.dtsi` raw)、T14(8250.yaml)、T15(8250_of.c) 五行; 与 [`docs/serial/com260-uart.md`](../serial/com260-uart.md) §3 / §5 / §10.1 / §10.4 / §10.5 交叉引用。
 - G11 由 Iteration 001 新增, 对应 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) U1-U5 五项子字段; `source-coverage.md` 不新增 URL 行 (G11 登记的是协议闭包, 不在官方来源覆盖表内); 与 G4 / G5 / G7 互不重复, 详见 G11 影响主题字段的职责互斥说明。
 - G12 由 Iteration 002 新增, 对应 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5 共十项子字段; `source-coverage.md` 不新增 URL 行 (Iteration 000 / 001 已把四个存储官网入口 + UFS docs-buildroot supporting row 设为当前职责, URL 总数仍为 70); 与 G5 / G7 互不重复, G5 负责 DMA/cache/coherency、G7 负责默认目标 DTS, G12 负责存储设备专属 binding/programmer reference、板级介质差异、消费层、完成模型、性能与错误恢复闭包, 详见 G12 影响主题字段的职责互斥说明。
+- G13 由 MS10 Iteration 003 新增，对应 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md)、[`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) 与 [`k3-ethercat.md`](../buses/k3-ethercat.md) 的未知项；五个总线官网入口已在 Iteration 000 转为当前职责，`source-coverage.md` 不新增 URL 行，总数仍为 70。G7 负责默认目标 DTS，G13 负责总线设备专属的板级映射、软件运行路径和恢复闭包。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
 - 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。
