@@ -204,6 +204,15 @@
 - 影响主题: `docs/peripherals/` 三篇正文及 `docs/platform/` 板级资源；与 G4/G5/G7 职责互斥：G4 负责 IRQ delivery，G5 负责 DMA/cache/IOMMU，G7 负责默认目标 DTS，G14 负责通用外设专属的板级映射、软件/固件运行路径、协议参数和恢复闭包。
 - 状态变更记录: 2026-09-12 由 MS11 Iteration 003 新增，状态 `open`；本 change 只汇总三篇 peripherals 正文的 13 组未知项，不解除任何子项。
 
+## G15. CoM260 镜像部署、刷写与恢复操作闭包
+
+- 分类: 镜像部署与恢复
+- 当前证据: [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md) 已分离构建输入、产物、容器与消费方，[`k3-ram-boot-and-fastboot.md`](../boot/k3-ram-boot-and-fastboot.md) 已分离 BootROM、U-Boot Fastboot 与 RAM 临时启动路径，[`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) 已分离 GPT、MTD、SD 与 Titan 四类持久化路径及恢复门槛；但当前来源仍不能闭合适用于同一 CoM260 产品修订的官方镜像包、当前启动与下载设备身份、目标介质与分区映射、Titan/工具兼容性、SD 启动选择、逐组件备份恢复和写后验证证据。
+- 禁止推断: 不得把 Pico-ITX、第三方实现或 K3 通用示例中的包名、设备身份、分区偏移、介质容量、命令、工具版本或恢复步骤外推到 CoM260；不得把 RAM 启动成功视为持久化写入安全，也不得仅由文件名、分区名或工具名称裁决实际 payload、目标位置或兼容性。
+- 解除条件: 取得适用于同一 CoM260 产品修订的官方镜像包与 manifest、只读板型/启动设备/目标介质/分区信息、精确工具版本与下载入口、逐组件备份和可逆恢复步骤，并在相同软硬件版本上形成身份确认、写入结果、重启后状态与失败恢复的分层证据。
+- 影响主题: `docs/boot/` 的三篇 MS12 正文；与 G7、G12 职责互斥：G7 负责默认目标 DTS 的唯一映射，G12 负责存储控制器专属的板级映射、运行路径与恢复闭包，G15 负责跨启动路径的镜像包、工具、写入操作与恢复契约，不替代 G7 或 G12。
+- 状态变更记录: 2026-09-14 由 MS12 Iteration 003 新增，状态 `open`；本 change 只汇总三篇 boot 正文的部署、刷写与恢复未知项，不解除任何子项。
+
 ---
 
 ## 缺口状态汇总
@@ -224,6 +233,7 @@
 | G12 | 硬件事实 | open | 2026-09-11 |
 | G13 | 硬件事实与协议/接口 | open | 2026-09-12 |
 | G14 | 硬件事实与协议/接口 | open | 2026-09-12 |
+| G15 | 镜像部署与恢复 | open | 2026-09-14 |
 
 ## 缺口与 source-coverage 的对应
 
@@ -239,5 +249,6 @@
 - G12 由 Iteration 002 新增, 对应 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5 共十项子字段; `source-coverage.md` 不新增 URL 行 (Iteration 000 / 001 已把四个存储官网入口 + UFS docs-buildroot supporting row 设为当前职责, URL 总数仍为 70); 与 G5 / G7 互不重复, G5 负责 DMA/cache/coherency、G7 负责默认目标 DTS, G12 负责存储设备专属 binding/programmer reference、板级介质差异、消费层、完成模型、性能与错误恢复闭包, 详见 G12 影响主题字段的职责互斥说明。
 - G13 由 MS10 Iteration 003 新增，对应 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md)、[`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) 与 [`k3-ethercat.md`](../buses/k3-ethercat.md) 的未知项；五个总线官网入口已在 Iteration 000 转为当前职责，`source-coverage.md` 不新增 URL 行，总数仍为 70。G7 负责默认目标 DTS，G13 负责总线设备专属的板级映射、软件运行路径和恢复闭包。
 - G14 由 MS11 Iteration 003 新增，对应 [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md)、[`k3-audio.md`](../peripherals/k3-audio.md) 与 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md) 的 13 组未知项；六个通用外设官网入口已在 Iteration 000 转为 current/active，`source-coverage.md` 不新增 URL 行，总数仍为 70。G4/G5/G7 分别负责 IRQ delivery、DMA/cache/IOMMU 和默认目标 DTS，G14 负责通用外设专属的板级映射、运行路径和恢复闭包。
+- G15 由 MS12 Iteration 003 新增，对应 [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md)、[`k3-ram-boot-and-fastboot.md`](../boot/k3-ram-boot-and-fastboot.md) 与 [`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) 的镜像包、工具、写入与恢复未知项；Iteration 000 已新增 6 个 K3-Ubuntu-Images 精确文件 URL，`source-coverage.md` 当前总数为 76。G7 负责默认目标 DTS，G12 负责存储控制器专属闭包，G15 负责跨路径的部署、刷写与恢复操作闭包。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
 - 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。

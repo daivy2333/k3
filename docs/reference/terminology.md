@@ -20,6 +20,15 @@
 | --- | --- | --- | --- |
 | K3 | K3 (SpacemiT Key Stone K3) | SpacemiT K3、key_stone/k3 | 仓库范围（M01）唯一允许的 SoC 平台名。 |
 | CoM260 Kit | K3 CoM260 Kit | CoM260、k3_com260 | 当前唯一技术目标板；指含 CoM260 模组的开发套件整体。 |
+| BootROM | Boot Read-Only Memory | Boot ROM、BROM | K3 上电或复位后首先执行的片上只读启动阶段；本地启动与下载启动边界见 [`k3-ram-boot-and-fastboot.md`](../boot/k3-ram-boot-and-fastboot.md) §3，不得由通用 K3 或 Pico-ITX 流程推断 CoM260 的当前启动设备身份。 |
+| FSBL | First-Stage Boot Loader | SPL、`FSBL.bin` | BootROM 后的第一阶段引导程序；构建配置、生成文件与下载时临时载荷是不同对象，产物角色和关系见 [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md) §3、§6。 |
+| ESOS | ESOS | `esos.elf` | K3 启动链中的管理/RCPU 固件对象；仓库证据没有给出缩写展开，其生产者、payload 与消费阶段见 [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md) §3、§6，不得仅凭同名文件推断版本或目标位置。 |
+| OpenSBI | Open Source Supervisor Binary Interface | `fw_dynamic.bin`、SBI runtime | K3 AP 启动链中为后续 supervisor 软件提供 SBI 服务的 M-mode runtime；与 U-Boot 的装载和交接关系见 [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md) §3、§6。 |
+| FIT | Flattened Image Tree | FIT image、ITB、`u-boot.itb` | 用于组织一个或多个镜像及其配置的容器格式；容器内 payload、上传缓冲区、运行装载地址与入口地址必须分开，见 [`k3-image-build-and-artifacts.md`](../boot/k3-image-build-and-artifacts.md) §2、§3 和 [`k3-ram-boot-and-fastboot.md`](../boot/k3-ram-boot-and-fastboot.md) §6。 |
+| Fastboot | Fastboot protocol | U-Boot Fastboot、BROM Fastboot | 本仓库统称主机与目标端之间的下载/刷写协议；必须按 BootROM 下载入口与 U-Boot 命令环境区分，RAM 入口和命令见 [`k3-ram-boot-and-fastboot.md`](../boot/k3-ram-boot-and-fastboot.md) §3、§5，持久化路径见 [`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) §5。 |
+| Titan | Titan flashing tool | Titan Flasher、Titantools | 用于消费 K3 镜像包的主机侧刷写工具/工作流名称；CoM260 适用版本、设备识别与包兼容性仍属 G15，操作边界见 [`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) §6。 |
+| GPT | GUID Partition Table | GPT 分区表 | 块设备的分区表格式；分区名、编号、偏移与容量必须来自当前目标介质的只读事实，不能套用 Pico-ITX 示例，见 [`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) §3、§5。 |
+| MTD | Memory Technology Device | MTD 分区 | Linux 中面向原始 flash 的设备与分区抽象；与 GPT 块设备、逻辑分区和文件系统不是同一层，刷写及恢复边界见 [`k3-flashing-and-recovery.md`](../boot/k3-flashing-and-recovery.md) §3、§8。 |
 | SoC | System on Chip | 系统级芯片 | 指 K3 芯片本体；用于区分模组、底板、套件。 |
 | AP | Application Processor | 应用处理器 | K3 主处理器域；与 RCPU 域相对。 |
 | RCPU | Real-time Control Processing Unit | 实时控制处理器 | K3 实时控制域；与 AP 域相对。 |

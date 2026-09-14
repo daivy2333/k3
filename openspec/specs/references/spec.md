@@ -271,3 +271,11 @@ Change Evidence 位于所属 change 内, 由 change 提供索引, 不登记 R。
 - 版本: 2026-09-12 由 change `establish-k3-general-peripheral-baseline` 归档时同步（8 added, 0 removed, 0 modified）
 - 用途: 收录 K3 GPIO / PWM / IR-RX / Audio / WDT / RTC 六类通用外设的 SoC 能力、控制器资源、对象边界（GPIO controller/pinctrl mux/IRQ 责任分离、PWM channel/pinmux/consumer 与 30/20 数量冲突并列保留、IR-RX controller 与 input 边界、Audio I2S/SSPA/DAI/sound card/codec 或 display endpoint/DMA/power domain 静态链与 codec/stream 边界分离、WDT 计数/复位与 MMIO RTC / RPMI RTC 双路径生命周期）与板级可达性分层、来源冲突与不可达状态处理、通用外设导航与既有 MS03-MS06 / G7 基线的一致性；明确官方事实、官方软件行为、推论与未知项的等级边界，不把 SoC 控制器存在、节点、复用引脚、电源输入或 disabled 状态解释为真板 GPIO/PWM/IR/Audio/WDT/RTC 功能可用；DMA/cache 边界通过 MS06 引用而不重复定义；是 MS11 主题文档与 source-coverage / known-gaps / terminology 同步的可追溯契约。
 - 状态: active
+
+## R26 — K3 镜像制作、烧录与启动操作基线需求规范
+
+- 类型: delta-spec
+- 路径: `openspec/specs/k3-image-flashing-boot-operations-baseline/spec.md`
+- 版本: 2026-09-14 由 change `establish-k3-image-flashing-boot-operations-baseline` 归档时同步（8 added, 0 removed, 0 modified）
+- 用途: 收录 K3/CoM260 镜像产物可追溯契约（producer/source、format/container、payload role、consuming stage、destination namespace、board scope、evidence class、unknowns）、地址/分区名称空间分离（FIT load/entry、upload buffer、BootROM transfer memory、storage offset、GPT/MTD partition、filesystem path）、易失 RAM 引导与持久部署分离、破坏性操作安全防护（Fastboot 分区、Titan 包、SD 整盘、单组件更新）、失败诊断不升级破坏性、来源与板级范围显式、命令可归属且未执行、导航与汇总一致；是 MS12 主题文档（`k3-image-build-and-artifacts.md` / `k3-ram-boot-and-fastboot.md` / `k3-flashing-and-recovery.md`）与 source-coverage / known-gaps（G15） / terminology / index 同步的可追溯契约。
+- 状态: active

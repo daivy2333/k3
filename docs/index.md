@@ -15,10 +15,10 @@
 
 ## 参考文档
 
-- [来源覆盖表](reference/source-coverage.md): 当前登记 70 个唯一 URL；包含来源职责、目标范围、主题位置、优先级、聚合状态、源端修订、观察日期、访问状态与备注。
+- [来源覆盖表](reference/source-coverage.md): 当前登记 76 个唯一 URL；包含来源职责、目标范围、主题位置、优先级、聚合状态、源端修订、观察日期、访问状态与备注。
 - [主题文档模板](reference/document-template.md): 主题文档的写作约束、可复用骨架与反例；包含单来源/多来源首行、四级证据强度、500 行拆分规则。
-- [术语表](reference/terminology.md): 63 个基础术语的主写法、英文原词、别名与使用说明；标题层只使用主写法。
-- [已知缺口](reference/known-gaps.md): 当前登记 G1-G14 共 14 类缺口；包含当前证据、禁止推断、解除条件与影响主题，其中 G3、G4、G5 为 `partial`。
+- [术语表](reference/terminology.md): 72 个基础术语的主写法、英文原词、别名与使用说明；标题层只使用主写法。
+- [已知缺口](reference/known-gaps.md): 当前登记 G1-G15 共 15 类缺口；包含当前证据、禁止推断、解除条件与影响主题，其中 G3、G4、G5 为 `partial`。
 - [来源刷新指南](reference/source-refresh.md): 人工刷新五种结果（unchanged / changed / moved / removed / unreachable）、操作顺序、change 与缺口边界、中断恢复与三段文字演练；与覆盖表的长期聚合状态、访问状态严格分离。
 
 ## 已聚合主题正文
@@ -33,6 +33,9 @@
 - `docs/boot/`
   - [com260-boot-chain.md](boot/com260-boot-chain.md): K3 SoC 启动能力与 K3 CoM260 Kit 已观察到的启动链路(local boot 路径: Boot ROM → FSBL/SPL → ESOS → OpenSBI → U-Boot → payload/OS; download boot 路径: Boot ROM → U-Boot Fastboot)、介质(SoC 支持 vs Kit 可用)、SDK 版本边界与未知项闭包。已聚合(Iteration 001)。
   - [com260-image-and-dts.md](boot/com260-image-and-dts.md): K3 CoM260 Kit 的可证镜像类型、写入方式、CoM260 DTS 候选集合(7 个候选 + 3 个已直接打开)、产品版本与 DTS 命名映射、未知项闭包。已聚合(Iteration 001)。
+  - [k3-image-build-and-artifacts.md](boot/k3-image-build-and-artifacts.md): K3 镜像构建输入、产物、容器、payload、消费方与命名空间的三条证据链，以及不能闭合到 CoM260 的未知项。已聚合(MS12 Iteration 000)。
+  - [k3-ram-boot-and-fastboot.md](boot/k3-ram-boot-and-fastboot.md): BootROM 与 U-Boot Fastboot 入口、易失状态、命令来源、FIT/DTB 门槛和分层恢复边界。已聚合(MS12 Iteration 001)。
+  - [k3-flashing-and-recovery.md](boot/k3-flashing-and-recovery.md): GPT、MTD、SD 与 Titan 四类持久化路径的安全门槛、中断恢复和写后验证边界。已聚合(MS12 Iteration 002)。
 - `docs/serial/`
   - [com260-uart.md](serial/com260-uart.md): K3 SoC 17 个 UART 物理实例(AP 域 10 + APBC2 secure 1 + RCPU 域 6)的 DTS 字段、CoM260 UART0 物理接口到 `uart0` 节点与静态 console 链路、来源冲突与固定 revision 第三方经验。已聚合(Iteration 001)。
 - `docs/dma/`
@@ -66,7 +69,7 @@
 | 主题路径 | 职责 | 当前主要来源（R05/R06 编号） | 状态 |
 | --- | --- | --- | --- |
 | `docs/platform/` | SoC 概述、pinctrl、clock、reset、设备管理；CoM260 板级资源归属 | R04 k3_ds / root_overview / com260_hw_resources；R05 device_management / 01-PINCTRL / 16-Clock / Reset | 已聚合(Iteration 000)：k3-soc-overview / k3-platform-control / com260-board-resources |
-| `docs/boot/` | 启动流程、镜像构建；OpenSBI / U-Boot handoff | R05 boot / image；linux-6.18 仓库 k3-br-v1.0.y 分支 | 已聚合(Iteration 001)：com260-boot-chain / com260-image-and-dts |
+| `docs/boot/` | 启动流程、镜像构建、RAM 下载、持久化刷写与恢复；OpenSBI / U-Boot handoff | R05 boot / image；linux-6.18 仓库 k3-br-v1.0.y 分支；K3-Ubuntu-Images 精确文件 | 已聚合(Iteration 001)：com260-boot-chain / com260-image-and-dts；已聚合(MS12 Iteration 000-002)：k3-image-build-and-artifacts / k3-ram-boot-and-fastboot / k3-flashing-and-recovery；G7/G15 open |
 | `docs/interrupts/` | AIA / APLIC / IMSIC、timer、hart routing、mailbox notification | R05 Timer；linux-6.18 K3 DTS/binding；R10-R12 固定 revision 第三方分析 | 已聚合(Iteration 001)：k3-interrupt-and-time / com260-mailbox-notification；G4 partial |
 | `docs/serial/` | UART 控制器、pinmux、early console | R05 05-UART | 已聚合(Iteration 001)：com260-uart |
 | `docs/dma/` | DMA 控制器、descriptor、地址宽度、ownership 转换 | R05 21-DMA | 已聚合(Iteration 000)：k3-dma-and-memory-ownership；已聚合(Iteration 001)：k3-cache-pma-address-translation；G5 partial |
@@ -82,7 +85,7 @@
 - 主题目录不创建空 overview 或占位文件；目录的存在与覆盖表的 `主题位置` 一致。
 - 主题文档变更前必须建立测试见证（文件存在、首行合规、相对链接解析、四级证据标注、术语一致）。
 - 源端变更必须创建 refresh change；`source-coverage.md` 之外不静默修改 `> 来源:` 行。
-- 入口页不贴具体技术内容；技术内容只写到主题文档；状态/计数（当前 70 URL、63 术语、14 gaps）随主题文档增量同步，禁止脱离主题文档独立修改。
+- 入口页不贴具体技术内容；技术内容只写到主题文档；状态/计数（当前 76 URL、72 术语、15 gaps）随主题文档增量同步，禁止脱离主题文档独立修改。
 
 ## 与全局约束的关系
 
