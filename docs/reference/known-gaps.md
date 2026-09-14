@@ -195,6 +195,15 @@
 - 影响主题: `docs/buses/` 三篇正文及 `docs/platform/` 板级资源；与 G3/G4/G5/G7 职责互斥：G3 负责 GMAC/PHY 详情，G4 负责 IRQ delivery，G5 负责 DMA/cache/IOMMU，G7 负责默认目标 DTS，G13 负责总线设备专属的板级映射、软件运行路径和恢复闭包。
 - 状态变更记录: 2026-09-12 由 MS10 Iteration 003 新增，状态 `open`；本 change 只汇总三篇 buses 正文的未知项，不解除任何子项。
 
+## G14. 通用外设板级映射、运行路径与恢复闭包
+
+- 分类: 硬件事实与协议/接口
+- 当前证据: [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md) 记录 GPIO controller/pinctrl/IRQ、PWM channel/pinmux/consumer、IR-RX controller/input 及 U1-U5；[`k3-audio.md`](../peripherals/k3-audio.md) 记录 I²S/SSPA controller、DAI、sound card、codec/display endpoint、DMA/power domain 及 U1-U4；[`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md) 记录 WDT、MMIO RTC、RPMI RTC、mailbox/IRQ、VCC_RTC 及 U1-U4。三篇正文均区分 SoC 能力、DTS 静态资源、板级连接、固件代理与运行结果，但官方 Buildroot 正文未直接取得，板级唯一映射、运行所有权、协议参数、真板行为和恢复路径仍缺证据。
+- 禁止推断: 不得裁决 PWM 30/20 数量冲突、GPIO bank 完整范围、IR-RX 协议/keymap、codec/route、AP/RCPU Audio 所有权、WDT timeout/restart、MMIO/RPMI RTC 所有权或 VCC_RTC 掉电保持；不得由节点、pinmux、IRQ、DMA、mailbox、sound card 或电源引脚存在声明 GPIO/PWM/IR、Audio、WDT reset、RTC timekeeping/alarm/唤醒已经运行。
+- 解除条件: 取得适用同一 CoM260 产品修订的原理图、BOM、完整目标 DTB，以及六个 K3 Buildroot 官方正文、binding、driver 或 programmer reference；在明确板型和软件版本上观察 GPIO/PWM/IR 输入输出、Audio stream/xrun、watchdog timeout/reset、两条 RTC 路径和掉电保持的结果与恢复行为。
+- 影响主题: `docs/peripherals/` 三篇正文及 `docs/platform/` 板级资源；与 G4/G5/G7 职责互斥：G4 负责 IRQ delivery，G5 负责 DMA/cache/IOMMU，G7 负责默认目标 DTS，G14 负责通用外设专属的板级映射、软件/固件运行路径、协议参数和恢复闭包。
+- 状态变更记录: 2026-09-12 由 MS11 Iteration 003 新增，状态 `open`；本 change 只汇总三篇 peripherals 正文的 13 组未知项，不解除任何子项。
+
 ---
 
 ## 缺口状态汇总
@@ -214,6 +223,7 @@
 | G11 | 协议/接口 | open | 2026-09-10 |
 | G12 | 硬件事实 | open | 2026-09-11 |
 | G13 | 硬件事实与协议/接口 | open | 2026-09-12 |
+| G14 | 硬件事实与协议/接口 | open | 2026-09-12 |
 
 ## 缺口与 source-coverage 的对应
 
@@ -228,5 +238,6 @@
 - G11 由 Iteration 001 新增, 对应 [`k3-rpc-ring-notification.md`](../amp/k3-rpc-ring-notification.md) U1-U5 五项子字段; `source-coverage.md` 不新增 URL 行 (G11 登记的是协议闭包, 不在官方来源覆盖表内); 与 G4 / G5 / G7 互不重复, 详见 G11 影响主题字段的职责互斥说明。
 - G12 由 Iteration 002 新增, 对应 [`k3-qspi-spi-sdhci.md`](../storage/k3-qspi-spi-sdhci.md) U1–U5 + [`k3-ufs.md`](../storage/k3-ufs.md) U1–U5 共十项子字段; `source-coverage.md` 不新增 URL 行 (Iteration 000 / 001 已把四个存储官网入口 + UFS docs-buildroot supporting row 设为当前职责, URL 总数仍为 70); 与 G5 / G7 互不重复, G5 负责 DMA/cache/coherency、G7 负责默认目标 DTS, G12 负责存储设备专属 binding/programmer reference、板级介质差异、消费层、完成模型、性能与错误恢复闭包, 详见 G12 影响主题字段的职责互斥说明。
 - G13 由 MS10 Iteration 003 新增，对应 [`k3-i2c-and-usb.md`](../buses/k3-i2c-and-usb.md)、[`k3-pcie-and-can.md`](../buses/k3-pcie-and-can.md) 与 [`k3-ethercat.md`](../buses/k3-ethercat.md) 的未知项；五个总线官网入口已在 Iteration 000 转为当前职责，`source-coverage.md` 不新增 URL 行，总数仍为 70。G7 负责默认目标 DTS，G13 负责总线设备专属的板级映射、软件运行路径和恢复闭包。
+- G14 由 MS11 Iteration 003 新增，对应 [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md)、[`k3-audio.md`](../peripherals/k3-audio.md) 与 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md) 的 13 组未知项；六个通用外设官网入口已在 Iteration 000 转为 current/active，`source-coverage.md` 不新增 URL 行，总数仍为 70。G4/G5/G7 分别负责 IRQ delivery、DMA/cache/IOMMU 和默认目标 DTS，G14 负责通用外设专属的板级映射、运行路径和恢复闭包。
 - R06 的 15 个 `deferred` URL 暂不展开到本表；如后续进入聚合 change，再决定是否新增对应 G 条目。
 - 镜像内部组成(`bootfs.img` / `rootfs.ext4` 容量与 partition 字段)的局部未知项见 `com260-image-and-dts.md` §6.4, 不在本 G 表登记(超出 T12 范围, 见 §8 Non-goals)。

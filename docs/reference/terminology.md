@@ -71,6 +71,16 @@
 | EtherCAT | Ethernet for Control Automation Technology | EtherCAT protocol | buses 主题术语；CoM260 shared DTS 只提供 `ec_master → eth1` 静态依赖，协议配置与运行边界见 [`k3-ethercat.md`](../buses/k3-ethercat.md)。 |
 | master | EtherCAT master | `ec_master`、`master0` | 本表限定为 EtherCAT 主站软件/对象，不泛指其他协议主设备；静态节点、软件组成与生命周期边界见 [`k3-ethercat.md`](../buses/k3-ethercat.md) §2-§4。 |
 | slave | EtherCAT slave | EtherCAT 从站 | 本表限定为 EtherCAT 从站设备；当前没有 K3 slave 清单、发现结果、拓扑或真板日志；见 [`k3-ethercat.md`](../buses/k3-ethercat.md) §3-§6。 |
+| GPIO | General-Purpose Input/Output | 通用输入输出 | peripherals 主题术语；controller、pinctrl、IRQ、bank/line 与板级引脚分层见 [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md)。 |
+| PWM | Pulse-Width Modulation | 脉宽调制 | peripherals 主题术语；controller channel、pinmux 和 consumer 分层，30/20 数量冲突保持未知；见 [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md)。 |
+| IR-RX | Infrared Receiver | IR receiver、红外接收 | peripherals 主题术语；限定为红外接收 controller/input 路径，不代表协议或 keymap 已验证；见 [`k3-gpio-pwm-ir.md`](../peripherals/k3-gpio-pwm-ir.md)。 |
+| I²S | Inter-IC Sound | I2S | Audio 串行总线/controller 主写法；与 SSPA CPU DAI、sound card 和 codec endpoint 分层；见 [`k3-audio.md`](../peripherals/k3-audio.md)。 |
+| SSPA | Synchronous Serial Port for Audio | SSPA controller | K3 Audio 的同步串行 controller/CPU DAI 对象；静态节点不证明 stream 成功；见 [`k3-audio.md`](../peripherals/k3-audio.md)。 |
+| DAI | Digital Audio Interface | CPU DAI、codec DAI | Audio endpoint 接口；按 CPU 侧与 codec/display 侧区分，不等同 sound card 或物理 route；见 [`k3-audio.md`](../peripherals/k3-audio.md)。 |
+| WDT | Watchdog Timer | WatchDog、watchdog | peripherals 主题术语；K3 WDT 能力、DTS 资源和 restart/timeout 边界见 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md)。 |
+| RTC | Real-Time Clock | MMIO RTC | 本表用于 MMIO RTC 或 RTC 通用概念；与 RPMI RTC 代理路径分开，运行所有权保持未知；见 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md)。 |
+| RPMI | RISC-V Platform Management Interface | RPMI RTC | 平台管理接口；本主题限定为经 mailbox 暴露的 RPMI RTC client，不证明 service 实现域或运行所有权；见 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md)。 |
+| VCC_RTC | RTC supply voltage | RTC 保持电源 | CoM260 模组暴露的 RTC 电源引脚；引脚存在不证明电池、掉电保持或唤醒成功；见 [`k3-wdt-rtc.md`](../peripherals/k3-wdt-rtc.md)。 |
 
 ## 标题层使用示例
 
